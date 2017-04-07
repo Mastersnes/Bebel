@@ -7,7 +7,7 @@ import javax.servlet.ServletException;
 
 import servlet.abstrait.AbstractServlet;
 import servlet.abstrait.GeneralException;
-import utils.CommunConstantes;
+import utils.Constantes;
 import utils.Logger;
 import utils.TokenUtils;
 import bdd.UserDAO;
@@ -61,7 +61,7 @@ public class ConnexionBebelServlet extends AbstractServlet<ConnexionBebelServlet
 
     @Override
     protected ConnexionBebelServletRequest getRequest(final String data) {
-        return CommunConstantes.GSON.fromJson(data, ConnexionBebelServletRequest.class);
+        return Constantes.GSON.fromJson(data, ConnexionBebelServletRequest.class);
     }
 
 }

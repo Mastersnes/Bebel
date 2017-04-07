@@ -8,7 +8,7 @@ import javax.servlet.ServletException;
 import servlet.abstrait.AbstractServlet;
 import servlet.abstrait.GeneralException;
 import servlet.abstrait.GeneralResponse;
-import utils.CommunConstantes;
+import utils.Constantes;
 import utils.Logger;
 import bdd.UserDAO;
 import bean.ComplexUser;
@@ -60,7 +60,7 @@ public class CheckInscriptionServlet extends AbstractServlet<CheckInscriptionSer
 
 	@Override
 	protected CheckInscriptionServletRequest getRequest(final String data) {
-		return CommunConstantes.GSON.fromJson(data, CheckInscriptionServletRequest.class);
+        return Constantes.GSON.fromJson(data, CheckInscriptionServletRequest.class);
 	}
 
 }

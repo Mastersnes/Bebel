@@ -4,7 +4,6 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
-import utils.CommunConstantes;
 import utils.Constantes;
 import utils.JsonUtils;
 import bean.ComplexUser;
@@ -37,7 +36,7 @@ public class UserDAO {
 	 */
 	public void restore() {
         final String json = JsonUtils.load(Constantes.USER_PATH);
-		final Gson gson = CommunConstantes.GSON;
+        final Gson gson = Constantes.GSON;
 		listUser.clear();
         final Type listType = new TypeToken<ArrayList<ComplexUser>>() {
         }.getType();
@@ -51,7 +50,7 @@ public class UserDAO {
 	 * Permet de raffraichir les donnees utilisateur
 	 */
 	public void refresh() {
-		final Gson gson = CommunConstantes.GSON;
+        final Gson gson = Constantes.GSON;
 		final String json = gson.toJson(listUser);
         JsonUtils.save(Constantes.USER_PATH, json);
 	}

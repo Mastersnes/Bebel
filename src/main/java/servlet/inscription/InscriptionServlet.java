@@ -8,9 +8,9 @@ import javax.servlet.ServletException;
 import servlet.abstrait.AbstractServlet;
 import servlet.abstrait.GeneralException;
 import servlet.abstrait.GeneralResponse;
-import utils.CommunConstantes;
-import utils.Logger;
 import utils.BebelMailUtils;
+import utils.Constantes;
+import utils.Logger;
 import bean.ComplexUser;
 import factory.UserFactory;
 
@@ -61,7 +61,7 @@ public class InscriptionServlet extends AbstractServlet<InscriptionServletReques
 
     @Override
     protected InscriptionServletRequest getRequest(final String data) {
-        return CommunConstantes.GSON.fromJson(data, InscriptionServletRequest.class);
+        return Constantes.GSON.fromJson(data, InscriptionServletRequest.class);
     }
 
 }
