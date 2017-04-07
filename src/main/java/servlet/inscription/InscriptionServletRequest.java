@@ -9,7 +9,9 @@ package servlet.inscription;
 public class InscriptionServletRequest {
     private String login;
     private String mail;
+    private String verifMail;
     private String mdp;
+    private String verifMdp;
 
     /**
      * @return the login
@@ -42,6 +44,21 @@ public class InscriptionServletRequest {
     }
 
     /**
+     * @return the verifMail
+     */
+    public String getVerifMail() {
+        return verifMail;
+    }
+
+    /**
+     * @param verifMail
+     *            the verifMail to set
+     */
+    public void setVerifMail(final String verifMail) {
+        this.verifMail = verifMail;
+    }
+
+    /**
      * @return the mdp
      */
     public String getMdp() {
@@ -54,5 +71,20 @@ public class InscriptionServletRequest {
      */
     public void setMdp(final String mdp) {
         this.mdp = mdp;
+    }
+
+    /**
+     * @return the verifMdp
+     */
+    public String getVerifMdp() {
+        return verifMdp;
+    }
+
+    /**
+     * @param verifMdp
+     *            the verifMdp to set
+     */
+    public void setVerifMdp(final String verifMdp) {
+        this.verifMdp = verifMdp;
     }
 }

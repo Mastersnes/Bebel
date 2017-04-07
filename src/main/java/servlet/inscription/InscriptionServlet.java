@@ -8,9 +8,9 @@ import javax.servlet.ServletException;
 import servlet.abstrait.AbstractServlet;
 import servlet.abstrait.GeneralException;
 import servlet.abstrait.GeneralResponse;
-import utils.Constantes;
+import utils.CommunConstantes;
 import utils.Logger;
-import utils.MailUtils;
+import utils.BebelMailUtils;
 import bean.ComplexUser;
 import factory.UserFactory;
 
@@ -37,6 +37,7 @@ public class InscriptionServlet extends AbstractServlet<InscriptionServletReques
             // On valide la requete
             validator.checkRequest(request);
             validator.checkMail(request);
+            validator.checkPassword(request);
             validator.checkNotExist(request);
 
             // Si tout se passe bien, on continue l'inscription
@@ -55,12 +56,12 @@ public class InscriptionServlet extends AbstractServlet<InscriptionServletReques
         final ComplexUser user = UserFactory.getInstance().create(request);
 
         // Et on lui envoit le mail de validation
-        MailUtils.getInstance().sendVerifMail(user.getMail(), user.getVerifToken());
+        BebelMailUtils.getInstance().sendVerifMail(user.getMail(), user.getVerifToken());
     }
 
     @Override
     protected InscriptionServletRequest getRequest(final String data) {
-        return Constantes.GSON.fromJson(data, InscriptionServletRequest.class);
+        return CommunConstantes.GSON.fromJson(data, InscriptionServletRequest.class);
     }
 
 }

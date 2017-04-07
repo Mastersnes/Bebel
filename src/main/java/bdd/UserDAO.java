@@ -1,14 +1,16 @@
 package bdd;
 
+import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import utils.CommunConstantes;
 import utils.Constantes;
-import utils.JsonUtil;
-import bdd.UserDAO;
+import utils.JsonUtils;
 import bean.ComplexUser;
 
 import com.google.gson.Gson;
+import com.google.gson.reflect.TypeToken;
 
 public class UserDAO {
 	private static UserDAO instance;
@@ -34,11 +36,12 @@ public class UserDAO {
 	 * Permet de restorer les donnees utilisateur
 	 */
 	public void restore() {
-		final String json = JsonUtil.load(JsonUtil.USER_PATH);
-		final Gson gson = Constantes.GSON;
+        final String json = JsonUtils.load(Constantes.USER_PATH);
+		final Gson gson = CommunConstantes.GSON;
 		listUser.clear();
-		@SuppressWarnings("unchecked")
-		final List<ComplexUser> users = gson.fromJson(json, List.class);
+        final Type listType = new TypeToken<ArrayList<ComplexUser>>() {
+        }.getType();
+        final List<ComplexUser> users = gson.fromJson(json, listType);
 		if (users != null) {
 			listUser.addAll(users);
 		}
@@ -48,9 +51,9 @@ public class UserDAO {
 	 * Permet de raffraichir les donnees utilisateur
 	 */
 	public void refresh() {
-		final Gson gson = Constantes.GSON;
+		final Gson gson = CommunConstantes.GSON;
 		final String json = gson.toJson(listUser);
-		JsonUtil.save(JsonUtil.USER_PATH, json);
+        JsonUtils.save(Constantes.USER_PATH, json);
 	}
 
 	/**
@@ -78,5 +81,6 @@ public class UserDAO {
 	 */
 	public void saveUser(final ComplexUser user) {
 		listUser.add(user);
+        refresh();
 	}
 }

@@ -1,4 +1,4 @@
-package servlet.validation;
+package servlet.checkInscription;
 
 /**
  * Requete de validation
@@ -6,7 +6,7 @@ package servlet.validation;
  * @author Mayitabel
  * 
  */
-public class ValidationServletRequest {
+public class CheckInscriptionServletRequest {
 	private String mail;
 	private String token;
 

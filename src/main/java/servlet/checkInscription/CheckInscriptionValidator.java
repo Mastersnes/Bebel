@@ -1,4 +1,4 @@
-package servlet.validation;
+package servlet.checkInscription;
 
 import org.apache.commons.lang.StringUtils;
 
@@ -11,14 +11,14 @@ import bean.ComplexUser;
  * @author Mayitabel
  * 
  */
-public class ValidationValidator {
+public class CheckInscriptionValidator {
 	    /**
      * Verifie que les champs ne sont pas null
      * 
      * @param request
      * @throws GeneralException
      */
-    public void checkRequest(final ValidationServletRequest request) throws GeneralException {
+    public void checkRequest(final CheckInscriptionServletRequest request) throws GeneralException {
 		final String mail = request.getMail();
 		final String token = request.getToken();
 

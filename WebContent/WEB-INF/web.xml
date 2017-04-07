@@ -24,4 +24,14 @@
         <servlet-name>CheckInscriptionServlet</servlet-name>
         <url-pattern>/checkSubscribe</url-pattern>
     </servlet-mapping>
+    
+    <!-- Connexion -->
+    <servlet>
+        <servlet-name>ConnexionBebelServlet</servlet-name>
+        <servlet-class>servlet.connexionBebel.ConnexionBebelServlet</servlet-class>
+    </servlet>
+    <servlet-mapping>
+        <servlet-name>ConnexionBebelServlet</servlet-name>
+        <url-pattern>/connexion</url-pattern>
+    </servlet-mapping>
 </web-app>

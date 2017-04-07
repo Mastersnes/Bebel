@@ -47,6 +47,10 @@ public class InscriptionValidator {
         if (!email.matches("^[a-zA-Z0-9+&*-]+(?:\\.[a-zA-Z0-9_+&*-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$")) {
             throw new GeneralException(2, "Votre email n'est pas correct.");
         }
+        final String verifMail = request.getVerifMail();
+        if (!StringUtils.equals(email, verifMail)) {
+            throw new GeneralException(2, "Veuillez noter le meme email dans le champ de confirmation.");
+        }
 	}
 
     /**
@@ -57,24 +61,9 @@ public class InscriptionValidator {
      */
     public void checkPassword(final InscriptionServletRequest request) throws GeneralException {
         final String mdp = request.getMdp();
-        // Contient une majuscule
-        if (!mdp.matches("^(?=.*[A-Z]).*$")) {
-            throw new GeneralException(3, "Votre mot de passe doit contenir au moins une majuscule.");
-        }
-
-		// Contient une minuscule
-        if (!mdp.matches("^(?=.*[a-z]).*$")) {
-            throw new GeneralException(3, "Votre mot de passe doit contenir au moins une minuscule.");
-        }
-
-		// Contient un chiffre
-        if (!mdp.matches("^(?=.*\\d).*$")) {
-            throw new GeneralException(3, "Votre mot de passe doit contenir au moins un chiffre.");
-        }
-
-		// Fait minimum 10 caracteres
-        if (mdp.length() < 10) {
-            throw new GeneralException(3, "Votre mot de passe doit faire au minimum 10 caracteres.");
+        final String verifMdp = request.getVerifMdp();
+        if (!StringUtils.equals(mdp, verifMdp)) {
+            throw new GeneralException(2, "Veuillez noter le meme mot de passe dans le champ de confirmation.");
         }
 	}
 
@@ -95,7 +84,12 @@ public class InscriptionValidator {
 		}
 
         if (user != null) {
-            throw new GeneralException(3, "Vous etes deja inscrit, merci de vous connecter.");
+            if (user.isVerified()) {
+                throw new GeneralException(3, "Vous etes deja inscrit, merci de vous connecter.");
+            } else {
+                throw new GeneralException(3,
+                        "Vous etes deja inscrit, merci de confirmer votre inscription en cliquant sur le lien dans l'email.");
+            }
         }
 	}
 }

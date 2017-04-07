@@ -3,7 +3,7 @@ package utils;
 import java.util.Date;
 import java.util.logging.Level;
 
-import utils.Constantes;
+import utils.CommunConstantes;
 
 public class Logger {
     private String name;
@@ -13,7 +13,7 @@ public class Logger {
     }
 
     public void log(final Level level, final String msg) {
-        final StringBuilder sb = new StringBuilder(Constantes.FORMAT.format(new Date()));
+        final StringBuilder sb = new StringBuilder(CommunConstantes.FORMAT.format(new Date()));
         sb.append(" - [").append(level.getName()).append("] ");
         sb.append(this.name).append(" : ").append(msg);
         System.out.println(sb.toString());
