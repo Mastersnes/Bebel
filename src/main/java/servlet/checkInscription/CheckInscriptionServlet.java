@@ -42,6 +42,7 @@ public class CheckInscriptionServlet extends AbstractServlet<CheckInscriptionSer
             validator.checkToken(user, request.getToken());
 
             user.setVerified(true);
+            UserDAO.getInstance().refresh();
             response.setMessage("Felicitation, vous pouvez maintenant vous connecter !");
         } catch (final GeneralException e) {
             logger.log(Level.WARNING, e.getMessage());
