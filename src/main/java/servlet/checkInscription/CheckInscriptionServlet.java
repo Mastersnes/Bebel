@@ -26,42 +26,42 @@ public class CheckInscriptionServlet extends AbstractServlet<CheckInscriptionSer
 
 	@Override
 	protected GeneralResponse doGet(final CheckInscriptionServletRequest request) throws ServletException, IOException {
-        final GeneralResponse response = new GeneralResponse();
-        try {
-            validator.checkRequest(request);
+		return null;
+	}
 
-            final ComplexUser user = UserDAO.getInstance().getUser(request.getMail());
-            if (user == null) {
-                throw new GeneralException(2, "Cet email est inconnu, merci de vous inscrire en premier lieu.");
-            }
+	@Override
+	protected GeneralResponse doPost(final CheckInscriptionServletRequest request) throws ServletException, IOException {
+		final GeneralResponse response = new GeneralResponse();
+		try {
+			validator.checkRequest(request);
 
-            if (user.isVerified()) {
-                throw new GeneralException(3, "Votre email est deja valide, vous pouvez vous connecter.");
-            }
+			final ComplexUser user = UserDAO.getInstance().getUser(request.getMail());
+			if (user == null) {
+				throw new GeneralException(2, "Cet email est inconnu, merci de vous inscrire en premier lieu.");
+			}
 
-            validator.checkToken(user, request.getToken());
+			if (user.isVerified()) {
+				throw new GeneralException(3, "Votre email est deja valide, vous pouvez vous connecter.");
+			}
 
-            user.setVerified(true);
-            UserDAO.getInstance().refresh();
-            response.setMessage("Felicitation, vous pouvez maintenant vous connecter !");
-        } catch (final GeneralException e) {
-            logger.log(Level.WARNING, e.getMessage());
-            response.setCodeRetour(e.getCodeRetour());
-            response.setMessage(e.getMessage());
-        }
+			validator.checkToken(user, request.getToken());
 
-        return response;
-    }
+			user.setVerified(true);
+			user.setVerifToken("done");
+			UserDAO.getInstance().refresh();
+			response.setMessage("Felicitation, vous pouvez maintenant vous connecter !");
+		} catch (final GeneralException e) {
+			logger.log(Level.WARNING, e.getMessage());
+			response.setCodeRetour(e.getCodeRetour());
+			response.setMessage(e.getMessage());
+		}
 
-    @Override
-    protected GeneralResponse doPost(final CheckInscriptionServletRequest request) throws ServletException, IOException {
-        new GeneralResponse();
-        return null;
+		return response;
 	}
 
 	@Override
 	protected CheckInscriptionServletRequest getRequest(final String data) {
-        return Constantes.GSON.fromJson(data, CheckInscriptionServletRequest.class);
+		return Constantes.GSON.fromJson(data, CheckInscriptionServletRequest.class);
 	}
 
 }

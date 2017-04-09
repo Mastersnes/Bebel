@@ -21,47 +21,48 @@ import factory.UserFactory;
  * 
  */
 public class InscriptionServlet extends AbstractServlet<InscriptionServletRequest, GeneralResponse> {
-    private static final long serialVersionUID = -4647019705021722992L;
-    private final Logger logger = new Logger(InscriptionServlet.class.getName());
-    private final InscriptionValidator validator = new InscriptionValidator();
+	private static final long serialVersionUID = -4647019705021722992L;
+	private final Logger logger = new Logger(InscriptionServlet.class.getName());
+	private final InscriptionValidator validator = new InscriptionValidator();
 
-    @Override
-    protected GeneralResponse doGet(final InscriptionServletRequest request) throws ServletException, IOException {
-        return null;
-    }
+	@Override
+	protected GeneralResponse doGet(final InscriptionServletRequest request) throws ServletException, IOException {
+		return null;
+	}
 
-    @Override
-    protected GeneralResponse doPost(final InscriptionServletRequest request) throws ServletException, IOException {
-        final GeneralResponse response = new GeneralResponse();
-        try {
-            // On valide la requete
-            validator.checkRequest(request);
-            validator.checkMail(request);
-            validator.checkPassword(request);
-            validator.checkNotExist(request);
+	@Override
+	protected GeneralResponse doPost(final InscriptionServletRequest request) throws ServletException, IOException {
+		final GeneralResponse response = new GeneralResponse();
+		try {
+			// On valide la requete
+			validator.checkRequest(request);
+			validator.checkMail(request);
+			validator.checkPassword(request);
+			validator.checkNotExist(request);
 
-            // Si tout se passe bien, on continue l'inscription
-            inscription(request);
-        } catch (final GeneralException e) {
-            logger.log(Level.WARNING, e.getMessage());
-            response.setCodeRetour(e.getCodeRetour());
-            response.setMessage(e.getMessage());
-        }
+			// Si tout se passe bien, on continue l'inscription
+			inscription(request);
+			response.setMessage("Felicitation, votre inscription est reussie ! Un mail de validation vient de vous etre envoye.");
+		} catch (final GeneralException e) {
+			logger.log(Level.WARNING, e.getMessage());
+			response.setCodeRetour(e.getCodeRetour());
+			response.setMessage(e.getMessage());
+		}
 
-        return response;
-    }
+		return response;
+	}
 
-    private void inscription(final InscriptionServletRequest request) {
-        // On creer l'utilisateur
-        final ComplexUser user = UserFactory.getInstance().create(request);
+	private void inscription(final InscriptionServletRequest request) {
+		// On creer l'utilisateur
+		final ComplexUser user = UserFactory.getInstance().create(request);
 
-        // Et on lui envoit le mail de validation
-        BebelMailUtils.getInstance().sendVerifMail(user.getMail(), user.getVerifToken());
-    }
+		// Et on lui envoit le mail de validation
+		BebelMailUtils.getInstance().sendVerifMail(user.getMail(), user.getVerifToken());
+	}
 
-    @Override
-    protected InscriptionServletRequest getRequest(final String data) {
-        return Constantes.GSON.fromJson(data, InscriptionServletRequest.class);
-    }
+	@Override
+	protected InscriptionServletRequest getRequest(final String data) {
+		return Constantes.GSON.fromJson(data, InscriptionServletRequest.class);
+	}
 
 }
