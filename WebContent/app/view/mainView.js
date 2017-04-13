@@ -4,8 +4,9 @@ define(["jquery",
         "app/utils/utils",
         "app/utils/messageUtils",
         "text!app/template/main.html",
-        "app/model/checkMailModel"], 
-function($, _, Utils, MessageUtils, page, Model) {
+        "app/model/checkMailModel",
+        "app/view/gamesView"], 
+function($, _, Utils, MessageUtils, page, Model, GamesView) {
 	'use strict';
 
 	return function() {
@@ -22,6 +23,8 @@ function($, _, Utils, MessageUtils, page, Model) {
 			var template = _.template(page);
 			var templateData = {};
 			this.el.html(template(templateData));
+			
+			this.gamesView = new GamesView(this);
 		};
 		
 		this.checkMail = function() {
