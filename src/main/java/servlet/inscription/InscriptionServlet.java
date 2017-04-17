@@ -47,12 +47,16 @@ public class InscriptionServlet extends AbstractServlet<InscriptionServletReques
 			logger.log(Level.WARNING, e.getMessage());
 			response.setCodeRetour(e.getCodeRetour());
 			response.setMessage(e.getMessage());
+		} catch (final Exception e) {
+			logger.log(Level.WARNING, e.getMessage());
+			response.setCodeRetour(-1);
+			response.setMessage("Erreur inconnue, veuillez contacter un administrateur : lesjeuxdebebel.contact@gmail.com");
 		}
 
 		return response;
 	}
 
-	private void inscription(final InscriptionServletRequest request) {
+	private void inscription(final InscriptionServletRequest request) throws GeneralException {
 		// On creer l'utilisateur
 		final ComplexUser user = UserFactory.getInstance().create(request);
 

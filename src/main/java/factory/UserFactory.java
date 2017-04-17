@@ -1,5 +1,6 @@
 package factory;
 
+import servlet.abstrait.GeneralException;
 import servlet.inscription.InscriptionServletRequest;
 import utils.TokenUtils;
 import bdd.UserDAO;
@@ -18,7 +19,7 @@ public class UserFactory {
 		return instance;
 	}
 
-	public ComplexUser create(final InscriptionServletRequest request) {
+	public ComplexUser create(final InscriptionServletRequest request) throws GeneralException {
 		final ComplexUser user = new ComplexUser();
 		user.setLogin(request.getLogin());
 		user.setMail(request.getMail());

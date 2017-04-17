@@ -4,6 +4,7 @@ import java.lang.reflect.Type;
 import java.util.ArrayList;
 import java.util.List;
 
+import servlet.abstrait.GeneralException;
 import utils.Constantes;
 import utils.JsonUtils;
 import bean.ComplexUser;
@@ -15,7 +16,7 @@ public class UserDAO {
 	private static UserDAO instance;
 	private final List<ComplexUser> listUser = new ArrayList<ComplexUser>();
 
-	private UserDAO() {
+	private UserDAO() throws GeneralException {
 		restore();
 	}
 
@@ -23,8 +24,9 @@ public class UserDAO {
 	 * Singleton
 	 * 
 	 * @return
+	 * @throws GeneralException
 	 */
-	public static synchronized UserDAO getInstance() {
+	public static synchronized UserDAO getInstance() throws GeneralException {
 		if (instance == null) {
 			instance = new UserDAO();
 		}
@@ -33,14 +35,16 @@ public class UserDAO {
 
 	/**
 	 * Permet de restorer les donnees utilisateur
+	 * 
+	 * @throws GeneralException
 	 */
-	public void restore() {
-        final String json = JsonUtils.load(Constantes.USER_PATH);
-        final Gson gson = Constantes.GSON;
+	public void restore() throws GeneralException {
+		final String json = JsonUtils.load(Constantes.USER_PATH);
+		final Gson gson = Constantes.GSON;
 		listUser.clear();
-        final Type listType = new TypeToken<ArrayList<ComplexUser>>() {
-        }.getType();
-        final List<ComplexUser> users = gson.fromJson(json, listType);
+		final Type listType = new TypeToken<ArrayList<ComplexUser>>() {
+		}.getType();
+		final List<ComplexUser> users = gson.fromJson(json, listType);
 		if (users != null) {
 			listUser.addAll(users);
 		}
@@ -48,11 +52,13 @@ public class UserDAO {
 
 	/**
 	 * Permet de raffraichir les donnees utilisateur
+	 * 
+	 * @throws GeneralException
 	 */
-	public void refresh() {
-        final Gson gson = Constantes.GSON;
+	public void refresh() throws GeneralException {
+		final Gson gson = Constantes.GSON;
 		final String json = gson.toJson(listUser);
-        JsonUtils.save(Constantes.USER_PATH, json);
+		JsonUtils.save(Constantes.USER_PATH, json);
 	}
 
 	/**
@@ -77,9 +83,10 @@ public class UserDAO {
 	 * enregistre l'utilisateur
 	 * 
 	 * @param user
+	 * @throws GeneralException
 	 */
-	public void saveUser(final ComplexUser user) {
+	public void saveUser(final ComplexUser user) throws GeneralException {
 		listUser.add(user);
-        refresh();
+		refresh();
 	}
 }

@@ -23,7 +23,8 @@ public class BebelMailUtils extends MailUtils {
 		message.append("Vous pouvez desormais acceder a tous nos jeux avec vos identifiant !<br/>");
 		message.append("Afin de confirmer votre inscription, veuillez suivre ce lien : <br/>");
 
-		String lien = "http://tomcat-bebel.rhcloud.com/Bebel/?mail=?1&token=?2";
+		String lien = CommunConstantes.BEBEL_WS();
+		lien += "/?origin=check&mail=?1&token=?2";
 		lien = lien.replace("?1", email);
 		lien = lien.replace("?2", token);
 
