@@ -26,21 +26,11 @@ function($, _, ViewUtils, page) {
 		
 		this.checkEvents = function() {
 			var that = this;
-			$("#connexion").click(function() {
-				MessageUtils.hide();
-				that.model.send(function(data) {
-					if (data.codeRetour != 0) {
-						MessageUtils.show(data.message, "danger");
-					}else {
-						console.log("success");
-					}
-				});
+			$("#bul").click(function() {
+				window.open("http://lesjeuxdebebel.fr.nf/BUL", "_blank");
 			});
-			$("#inscription").click(function() {
-				if (!that.inscriptionView) {
-					that.inscriptionView = new InscriptionView(that);
-				}
-				that.inscriptionView.show();
+			$("#samhain").click(function() {
+				window.open("http://lesjeuxdebebel.fr.nf/Samhain", "_blank");
 			});
 		};
 		
