@@ -7,6 +7,7 @@ import javax.servlet.ServletException;
 
 import servlet.abstrait.AbstractServlet;
 import servlet.abstrait.GeneralException;
+import utils.BebelMailUtils;
 import utils.Constantes;
 import utils.Logger;
 import utils.TokenUtils;
@@ -45,6 +46,8 @@ public class ConnexionBebelServlet extends AbstractServlet<ConnexionBebelServlet
             validator.checkPassword(user, request.getMdp());
 
             if (!user.isVerified()) {
+                // On reenvoit le mail de validation
+                BebelMailUtils.getInstance().sendVerifMail(user.getMail(), user.getVerifToken());
                 throw new GeneralException(4, "Veuillez valider votre inscription en verifiant vos mail.");
             }
 

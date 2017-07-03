@@ -3,6 +3,7 @@ package servlet.inscription;
 import org.apache.commons.lang.StringUtils;
 
 import servlet.abstrait.GeneralException;
+import utils.BebelMailUtils;
 import bdd.UserDAO;
 import bean.ComplexUser;
 
@@ -87,6 +88,8 @@ public class InscriptionValidator {
 			if (user.isVerified()) {
 				throw new GeneralException(3, "Vous etes deja inscrit, merci de vous connecter.");
 			} else {
+                // On reenvoit le mail de validation
+                BebelMailUtils.getInstance().sendVerifMail(user.getMail(), user.getVerifToken());
 				throw new GeneralException(3,
 						"Vous etes deja inscrit, merci de confirmer votre inscription en cliquant sur le lien dans l'email.");
 			}

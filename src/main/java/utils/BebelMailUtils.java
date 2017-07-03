@@ -17,7 +17,7 @@ public class BebelMailUtils extends MailUtils {
 	}
 
 	public void sendVerifMail(final String email, final String token) {
-		final String subject = "Mail de confirmation";
+        final String subject = "Mail de confirmation - Ne pas repondre";
 		final StringBuilder message = new StringBuilder();
 		message.append("Bonjour, vous voici inscrit sur Bebel !<br/>");
 		message.append("Vous pouvez desormais acceder a tous nos jeux avec vos identifiant !<br/>");
