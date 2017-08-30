@@ -32,7 +32,7 @@ function($, _, ViewUtils, page) {
 				$(".game-list").show();
 			});
 			$("#bul").click(function() {
-				window.open("http://lesjeuxdebebel.fr.nf/BUL", "_blank");
+				alert("En construction");
 			});
 			$("#samhain").click(function() {
 				window.open("http://lesjeuxdebebel.fr.nf/Samhain", "_blank");
@@ -48,6 +48,12 @@ function($, _, ViewUtils, page) {
 				$(".flash-game").show();
 				$(".game-list").hide();
 			});
+			$("#pieceOfCake").click(function() {
+			    window.open("https://les-jeux-de-bebel.itch.io/piece-of-cake", "_blank");
+            });
+			$("#slimer").click(function() {
+                window.open("https://les-jeux-de-bebel.itch.io/slimer", "_blank");
+            });
 		};
 		
 		this.init(parent);
