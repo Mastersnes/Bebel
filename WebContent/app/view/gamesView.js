@@ -35,7 +35,7 @@ function($, _, ViewUtils, page) {
 				alert("En construction");
 			});
 			$("#samhain").click(function() {
-				window.open("http://lesjeuxdebebel.fr.nf/Samhain", "_blank");
+				window.open("https://les-jeux-de-bebel.itch.io/samhain", "_blank");
 			});
 			$("#heritage").click(function() {
 				$(".flash-game embed").attr("src", "app/swf/heritage.swf");
