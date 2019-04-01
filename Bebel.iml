@@ -18,6 +18,5 @@
     <orderEntry type="inheritedJdk" />
     <orderEntry type="library" name="org.eclipse.m2e.MAVEN2_CLASSPATH_CONTAINER" level="application" />
     <orderEntry type="sourceFolder" forTests="false" />
-    <orderEntry type="library" name="Maven: com.bebel:CommunWeb:0.0.1-SNAPSHOT" level="project" />
   </component>
 </module>
