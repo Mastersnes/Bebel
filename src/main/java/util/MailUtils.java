@@ -4,7 +4,7 @@ import com.sendgrid.SendGrid;
 import com.sendgrid.SendGridException;
 
 public class MailUtils extends Thread {
-	private Logger logger = new Logger(getClass());
+//	private Logger logger = new Logger(getClass());
 
     private String to;
     private String subject;
@@ -38,20 +38,20 @@ public class MailUtils extends Thread {
         email.setSubject(subject);
         email.setHtml(message);
 
-        logger.debug("---Mail---");
-        logger.debug("Mail envoye a : " + to);
-        logger.debug("Sujet : " + subject);
-        logger.debug("Message : " + message);
-        logger.debug("----------");
+//        logger.debug("---Mail---");
+//        logger.debug("Mail envoye a : " + to);
+//        logger.debug("Sujet : " + subject);
+//        logger.debug("Message : " + message);
+//        logger.debug("----------");
 
         try {
             final SendGrid.Response reponse = sendgrid.send(email);
-            logger.info("Le mail a bien ete envoye");
-            if (reponse != null) {
-                logger.info(reponse.getCode() + " : " + reponse.getMessage());
-            }
+//            logger.info("Le mail a bien ete envoye");
+//            if (reponse != null) {
+//                logger.info(reponse.getCode() + " : " + reponse.getMessage());
+//            }
         } catch (final SendGridException e) {
-            logger.err("Erreur lors de l'envoi du mail : ", e);
+//            logger.err("Erreur lors de l'envoi du mail : ", e);
         }
     }
 }

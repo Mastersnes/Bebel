@@ -1,0 +1,1 @@
+define(["app/utils/utils"],function(a){return function(){this.data={mail:"mail",token:"token"};this.send=function(b){this.data.mail=a.getUrlParameter("mail");this.data.token=a.getUrlParameter("token");a.load("checkSubscribe",this.data,b)}}});

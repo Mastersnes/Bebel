@@ -1,29 +1,26 @@
 package servlet.youlose;
 
-import request.SaveRequest;
-import servlet.abstrait.AbstractServlet;
-
-import javax.servlet.ServletException;
-import java.io.IOException;
+import org.springframework.stereotype.Controller;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 
 /**
  * Controller permettant d'effectuer une sauvegarde youlose
  * 
  */
-public class SaveServlet extends AbstractServlet<SaveRequest, String> {
+@Controller
+public class SaveServlet {
 
-	@Override
-	protected String doGet(final SaveRequest request) throws ServletException, IOException {
-		return null;
+	@RequestMapping("/save")
+	@ResponseBody
+	public String save() {
+		return "Save !";
 	}
 
-	@Override
-	protected String doPost(final SaveRequest request) throws ServletException, IOException {
-		return null;
+	@RequestMapping("/getSave")
+	@ResponseBody
+	public String getSave() {
+		return "getSave !";
 	}
 
-	@Override
-	protected Class<SaveRequest> getRequestType() {
-		return SaveRequest.class;
-	}
 }

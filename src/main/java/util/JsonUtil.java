@@ -10,7 +10,7 @@ import java.io.FileWriter;
  * Utilitaire JSON utilisé pour les données fixes
  */
 public class JsonUtil {
-	private Logger logger = new Logger(getClass());
+//	private Logger logger = new Logger(getClass());
 
 	public static JsonUtil instance;
 	protected final String CONNEXION_PATH = "./Bebel/data.json";
@@ -36,8 +36,8 @@ public class JsonUtil {
 			String line;
 			while ((line = in.readLine()) != null) json += line;
 		} catch (final Exception e) {
-			if (data != null) logger.err("Erreur lors du chargement du fichier : " + data.getAbsolutePath(), e);
-			else logger.err("Erreur lors du chargement du fichier : " + path, e);
+//			if (data != null) logger.err("Erreur lors du chargement du fichier : " + data.getAbsolutePath(), e);
+//			else logger.err("Erreur lors du chargement du fichier : " + path, e);
 		}
 		return json;
 	}
@@ -52,8 +52,8 @@ public class JsonUtil {
             out.append(json);
             out.flush();
         } catch (final Exception e) {
-			if (data != null) logger.err("Erreur lors de la sauvegarde du fichier : " + data.getAbsolutePath(), e);
-			else logger.err("Erreur lors de la sauvegarde du fichier : " + path, e);
+//			if (data != null) logger.err("Erreur lors de la sauvegarde du fichier : " + data.getAbsolutePath(), e);
+//			else logger.err("Erreur lors de la sauvegarde du fichier : " + path, e);
         }
     }
 }
