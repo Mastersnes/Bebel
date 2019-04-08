@@ -1,63 +1,10 @@
-## Java
-
-*.class
-*.war
-*.ear
-hs_err_pid*
-
-## Android Studio and Intellij and Android in general
+target/
+.env
 .idea/
-*.ipr
-*.iws
 *.iml
-
-## Eclipse
-
 .classpath
 .project
-.metadata/
-/bin/
-*.tmp
-*.bak
-*.swp
-*~.nib
 .settings/
-.loadpath
-.externalToolBuilders/
-*.launch
-
-## NetBeans
-
-/nbproject/private/
-
-/build/
-
-/nbbuild/
-
-/dist/
-
-/nbdist/
-
-nbactions.xml
-nb-configuration.xml
-
-## OS Specific
-.DS_Store
-Thumbs.db
-
-## iOS
-/ios/xcode/*.xcodeproj/*
-!/ios/xcode/*.xcodeproj/xcshareddata
-!/ios/xcode/*.xcodeproj/project.pbxproj
-/ios/xcode/native/
-
-/ios-moe/xcode/*.xcodeproj/*
-!/ios-moe/xcode/*.xcodeproj/xcshareddata
-!/ios-moe/xcode/*.xcodeproj/project.pbxproj
-/ios-moe/xcode/native/
-
-#IntelliJ
-.idea
-*.iml
-*.ipr
-*.iws
+docs/tmp/
+docs/java-getting-started/
+docs/deploying-spring-boot-apps/

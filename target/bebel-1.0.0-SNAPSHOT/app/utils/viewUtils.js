@@ -1,1 +1,0 @@
-define(["jquery"],function(b){return{verticalCenter:function(){b(".js-center").each(function(e,d){var c=b(d),a=b(c.parent()),a=a.offset().top+a.height()/2-c.height()/2;c.offset({top:a})})}}});

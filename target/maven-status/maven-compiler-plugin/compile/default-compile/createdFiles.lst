@@ -1,8 +1,1 @@
-servlet\youlose\SaveServlet.class
-util\HibernateUtil.class
-BebelApplication.class
-servlet\youlose\GetSaveServlet.class
-util\Constantes.class
-bdd\youlose\YouLoseDTO.class
-util\JsonUtil.class
-util\MailUtils.class
+com\example\Main.class
