@@ -1,5 +1,6 @@
 package com.bebel.web;
 
+import enums.SaveType;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
@@ -10,15 +11,17 @@ import request.SaveRequest;
 @RequestMapping("/youlose")
 public class YouLoseController {
 
+  @GetMapping("/saves/{username}")
+  @ResponseBody
+  public ResponseEntity<String> getSaves(@PathVariable("username") final String username) {
+      return new ResponseEntity<>("Voici les sauvegardes de " + username, HttpStatus.OK);
+  }
+
   @GetMapping("/save/{username}/{type}")
   @ResponseBody
   public ResponseEntity<String> getSave(@PathVariable("username") final String username,
-                                        @PathVariable(value = "type", required = false) final String type) {
-    if (type == null) {
-      return new ResponseEntity<>("Voici les sauvegardes de " + username, HttpStatus.OK);
-    }else {
+                                        @PathVariable("type") final SaveType type) {
       return new ResponseEntity<>("Ceci est la sauvegarde " + type + " de " + username, HttpStatus.OK);
-    }
   }
 
   @PostMapping(value = "/save")
