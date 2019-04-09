@@ -24,7 +24,7 @@ public class YouLoseController {
   }
 
   @PostMapping("/save")
-  ResponseEntity save(@RequestParam final SaveRequest request) {
+  public ResponseEntity save(@RequestParam final SaveRequest request) {
     return new ResponseEntity<>("enregistrement de la sauvegarde " + request.getData() + "de type :" + request.getType() + " pour " + request.getUsername(), HttpStatus.CREATED);
   }
 }
