@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
+import request.SaveRequest;
 
 @Controller
 @RequestMapping("/youlose")
@@ -23,7 +24,7 @@ public class YouLoseController {
   }
 
   @PostMapping("/save")
-  ResponseEntity save(@RequestParam String username, @RequestParam String type, @RequestParam String save) {
-    return new ResponseEntity<>("enregistrement de la sauvegarde " + save + "de type :" + type + " pour " + username, HttpStatus.CREATED);
+  ResponseEntity save(@RequestParam final SaveRequest request) {
+    return new ResponseEntity<>("enregistrement de la sauvegarde " + request.getData() + "de type :" + request.getType() + " pour " + request.getUsername(), HttpStatus.CREATED);
   }
 }
