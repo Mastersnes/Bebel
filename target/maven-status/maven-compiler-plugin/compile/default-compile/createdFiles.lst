@@ -1,2 +1,3 @@
 com\bebel\web\YouLoseController.class
+com\bebel\web\util\SaveTypeConvertor.class
 com\bebel\App.class
