@@ -34,7 +34,7 @@ public class YouLoseDao extends AbstractDao {
         params.put("username", username);
         params.put("type", type.toString());
 
-        return unique("SELECT t.save FROM YouLoseDto t WHERE t.username = :username", params, String.class);
+        return unique("SELECT t.save FROM YouLoseDto t WHERE t.username = :username and type = :type", params, String.class);
     }
 
     public void save(final String username, final SaveType type, final String save) {
