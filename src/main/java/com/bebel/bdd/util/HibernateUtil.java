@@ -1,10 +1,10 @@
 package com.bebel.bdd.util;
 
 import com.bebel.bdd.dto.YouLoseDto;
+import com.bebel.soclews.util.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
 import org.hibernate.cfg.Environment;
-import util.Logger;
 
 import java.util.Properties;
 

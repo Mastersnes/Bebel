@@ -1,6 +1,6 @@
 package com.bebel.web.util;
 
-import enums.SaveType;
+import com.bebel.youloseClient.enums.SaveType;
 import org.springframework.core.convert.converter.Converter;
 import org.springframework.stereotype.Component;
 

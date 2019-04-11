@@ -1,11 +1,11 @@
 package com.bebel.bdd.dao;
 
 import com.bebel.bdd.dto.YouLoseDto;
-import enums.SaveType;
+import com.bebel.soclews.util.Logger;
+import com.bebel.youloseClient.enums.SaveType;
 import org.hibernate.Session;
 import org.hibernate.query.Query;
 import org.springframework.stereotype.Repository;
-import util.Logger;
 
 import java.util.HashMap;
 import java.util.Map;

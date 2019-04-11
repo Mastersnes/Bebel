@@ -1,18 +1,21 @@
 package com.bebel.web;
 
 import com.bebel.bdd.dao.YouLoseDao;
-import enums.SaveType;
+import com.bebel.soclews.request.KongregateRequest;
+import com.bebel.youloseClient.enums.SaveType;
+import com.bebel.youloseClient.request.GetSaveRequest;
+import com.bebel.youloseClient.request.SaveRequest;
+import com.bebel.youloseClient.response.GetSavesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.util.CollectionUtils;
-import org.springframework.web.bind.annotation.*;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.ResponseBody;
 import org.thymeleaf.util.StringUtils;
-import request.GetSaveRequest;
-import request.KongregateRequest;
-import request.SaveRequest;
-import response.GetSavesResponse;
 
 import java.util.Map;
 
