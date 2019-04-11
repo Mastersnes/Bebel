@@ -1,3 +1,7 @@
+com\bebel\bdd\dto\YouLoseDto.class
 com\bebel\web\YouLoseController.class
 com\bebel\web\util\SaveTypeConvertor.class
+com\bebel\bdd\dao\AbstractDao.class
 com\bebel\App.class
+com\bebel\bdd\dao\YouLoseDao.class
+com\bebel\bdd\util\HibernateUtil.class
