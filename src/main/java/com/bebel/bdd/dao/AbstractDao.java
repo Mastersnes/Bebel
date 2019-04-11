@@ -7,6 +7,7 @@ import org.hibernate.SessionFactory;
 import org.hibernate.Transaction;
 import org.hibernate.query.Query;
 
+import javax.transaction.Transactional;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -18,15 +19,12 @@ public abstract class AbstractDao {
         return HibernateUtil.getInstance().getSessionFactory();
     }
 
+    @Transactional
     public <DTO> void save(final DTO dto) {
-        Transaction transaction = null;
         try (final Session session = sessionFactory().openSession()) {
-            transaction = session.beginTransaction();
-            transaction.begin();
             session.saveOrUpdate(dto);
-            transaction.commit();
+            session.flush();
         } catch (final Exception e) {
-            if (transaction != null) transaction.rollback();
             log.err("Impossible d'ecrire la table.", e);
         }
     }
