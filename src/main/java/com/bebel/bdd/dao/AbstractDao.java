@@ -19,7 +19,6 @@ public abstract class AbstractDao {
         return HibernateUtil.getInstance().getSessionFactory();
     }
 
-    @Transactional
     public <DTO> void save(final DTO dto) {
         try (final Session session = sessionFactory().openSession()) {
             session.saveOrUpdate(dto);
