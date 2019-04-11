@@ -1,6 +1,7 @@
 package com.bebel.bdd.util;
 
 import com.bebel.bdd.dto.YouLoseDto;
+import com.bebel.bdd.dto.YuleDto;
 import com.bebel.soclews.util.Logger;
 import org.hibernate.SessionFactory;
 import org.hibernate.cfg.Configuration;
@@ -47,7 +48,9 @@ public class HibernateUtil {
 
             final Configuration configuration = new Configuration();
             configuration.setProperties(settings);
+
             configuration.addAnnotatedClass(YouLoseDto.class);
+            configuration.addAnnotatedClass(YuleDto.class);
 
             sessionFactory = configuration.buildSessionFactory();
         } catch (final Exception e) {
