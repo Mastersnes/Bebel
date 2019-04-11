@@ -21,7 +21,6 @@ public abstract class AbstractDao {
     public <DTO> void save(final DTO dto) {
         try (final Session session = sessionFactory().openSession()) {
             final Transaction transaction = session.beginTransaction();
-            transaction.begin();
             session.saveOrUpdate(dto);
             transaction.commit();
         } catch (final Exception e) {
