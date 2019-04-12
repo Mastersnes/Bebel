@@ -1,5 +1,6 @@
 package com.bebel.web;
 
+import com.bebel.App;
 import com.bebel.bdd.dao.YouLoseDao;
 import com.bebel.exception.BadCredentialException;
 import com.bebel.soclews.request.KongregateRequest;
@@ -9,6 +10,7 @@ import com.bebel.youloseClient.request.GetSaveRequest;
 import com.bebel.youloseClient.request.SaveRequest;
 import com.bebel.youloseClient.response.GetSavesResponse;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.boot.SpringApplication;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
