@@ -3,6 +3,7 @@ package com.bebel.web.yule;
 import com.bebel.bdd.dao.YuleDao;
 import com.bebel.exception.BadCredentialException;
 import com.bebel.soclews.request.KongregateRequest;
+import com.bebel.soclews.response.GeneralResponse;
 import com.bebel.soclews.util.HashUtil;
 import com.bebel.soclews.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
@@ -23,33 +24,49 @@ public class YuleController {
     @CrossOrigin(origins = "https://game302789.konggames.com")
     @PostMapping("/getSave")
     @ResponseBody
-    public ResponseEntity<String> getSave(@RequestBody final KongregateRequest request) {
+    public ResponseEntity<YuleResponse> getSave(@RequestBody final KongregateRequest request) {
+        final YuleResponse response = new YuleResponse();
+
         logger.info("Recuperation de la sauvegarde : " + request.getUsername());
         try {
             checkPass(request);
-            final String response = dao.getSave(request.getUsername());
-            if (StringUtils.isEmpty(response))
-                return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            else
+            final String data = dao.getSave(request.getUsername());
+            if (StringUtils.isEmpty(data)) {
+                response.setCodeRetour(HttpStatus.NO_CONTENT.value());
+                response.setMessage("No Content");
+                return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            } else {
+                response.setCodeRetour(0);
+                response.setMessage("OK");
+                response.setData(data);
                 return new ResponseEntity<>(response, HttpStatus.OK);
+            }
         } catch (final BadCredentialException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            response.setCodeRetour(HttpStatus.FORBIDDEN.value());
+            response.setMessage("Accès refusé");
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
     }
 
     @CrossOrigin(origins = "https://game302789.konggames.com")
     @PostMapping(value = "/save")
     @ResponseBody
-    public ResponseEntity<String> save(@RequestBody final YuleSaveRequest request) {
+    public ResponseEntity<GeneralResponse> save(@RequestBody final YuleSaveRequest request) {
+        final GeneralResponse response = new GeneralResponse();
         logger.info("Lancement de la sauvegarde : " + request.getUsername());
         try {
             checkPass(request);
 
             logger.info("Sauvegarde de : " + request.getData());
             dao.save(request.getUsername(), request.getData());
-            return new ResponseEntity<>(HttpStatus.CREATED);
+
+            response.setCodeRetour(0);
+            response.setMessage("OK");
+            return new ResponseEntity<>(response, HttpStatus.CREATED);
         } catch (final BadCredentialException e) {
-            return new ResponseEntity<>(HttpStatus.FORBIDDEN);
+            response.setCodeRetour(HttpStatus.FORBIDDEN.value());
+            response.setMessage("Accès refusé");
+            return new ResponseEntity<>(response, HttpStatus.FORBIDDEN);
         }
     }
 

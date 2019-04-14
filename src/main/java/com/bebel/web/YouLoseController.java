@@ -31,17 +31,24 @@ public class YouLoseController {
     @PostMapping("/getSaves")
     @ResponseBody
     public ResponseEntity<GetSavesResponse> getSaves(@RequestBody final KongregateRequest request) {
+        final GetSavesResponse response = new GetSavesResponse();
         logger.info("Recuperation des sauvegardes de : " + request.getUsername());
         try {
             checkPass(request);
             final Map<SaveType, String> datas = dao.getSaves(request.getUsername());
-            if (CollectionUtils.isEmpty(datas)) return new ResponseEntity<>(HttpStatus.NO_CONTENT);
-            else {
-                final GetSavesResponse response = new GetSavesResponse();
+            if (CollectionUtils.isEmpty(datas)) {
+                response.setCodeRetour(HttpStatus.NO_CONTENT.value());
+                response.setMessage("No Content");
+                return new ResponseEntity<>(response, HttpStatus.NO_CONTENT);
+            } else {
+                response.setCodeRetour(0);
+                response.setMessage("OK");
                 response.getSave().putAll(datas);
                 return new ResponseEntity<>(response, HttpStatus.OK);
             }
         } catch (final BadCredentialException e) {
+            response.setCodeRetour(HttpStatus.FORBIDDEN.value());
+            response.setMessage("Accès refusé");
             return new ResponseEntity<>(HttpStatus.FORBIDDEN);
         }
     }
