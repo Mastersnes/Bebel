@@ -4,6 +4,7 @@ import com.bebel.bdd.dao.YuleDao;
 import com.bebel.exception.BadCredentialException;
 import com.bebel.soclews.request.KongregateRequest;
 import com.bebel.soclews.util.HashUtil;
+import com.bebel.soclews.util.Logger;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -17,12 +18,15 @@ import org.thymeleaf.util.StringUtils;
 @Controller
 @RequestMapping("/yule")
 public class YuleController {
+    private final Logger logger = new Logger(getClass());
+
     @Autowired
     private YuleDao dao;
 
     @PostMapping("/getSave")
     @ResponseBody
     public ResponseEntity<String> getSave(@RequestBody final KongregateRequest request) {
+        logger.info("Recuperation de la sauvegarde : " + request.getUsername());
         try {
             checkPass(request);
             final String response = dao.getSave(request.getUsername());
@@ -38,8 +42,11 @@ public class YuleController {
     @PostMapping(value = "/save")
     @ResponseBody
     public ResponseEntity<String> save(@RequestBody final YuleSaveRequest request) {
+        logger.info("Lancement de la sauvegarde : " + request.getUsername());
         try {
             checkPass(request);
+
+            logger.info("Sauvegarde de : " + request.getData());
             dao.save(request.getUsername(), request.getData());
             return new ResponseEntity<>(HttpStatus.CREATED);
         } catch (final BadCredentialException e) {
@@ -51,6 +58,9 @@ public class YuleController {
         final String secretRequest = request.getSecretPass();
         final String secret = "Yule5497" + request.getUsername();
         final String hashSecret = HashUtil.getInstance().hash(secret);
+
+        logger.info("Verification du code secret : " + secretRequest);
+        logger.info("code secret generé : " + hashSecret);
 
         if (secretRequest == null || !secretRequest.equals(hashSecret))
             throw new BadCredentialException();
