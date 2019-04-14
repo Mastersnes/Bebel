@@ -58,8 +58,7 @@ public class YuleController {
         final String secret = "Yule5497" + request.getUsername();
         final String hashSecret = HashUtil.getInstance().hash(secret);
 
-        logger.info("Verification du code secret : " + secretRequest);
-        logger.info("code secret generé : " + hashSecret);
+        logger.debug("Verification du code secret : " + secretRequest + " avec le code secret generé : " + hashSecret);
 
         if (secretRequest == null || !secretRequest.equals(hashSecret))
             throw new BadCredentialException();

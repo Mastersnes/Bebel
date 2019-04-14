@@ -1,9 +1,6 @@
 package com.bebel.bdd.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -14,6 +11,8 @@ public class YuleDto implements Serializable {
   @Id
   @Column(name="USERNAME", updatable = false, nullable = false)
   private String username;
+
+  @Lob
   @Column(name="SAVE", nullable = false)
   private String save;
 

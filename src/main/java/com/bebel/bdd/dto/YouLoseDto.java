@@ -1,9 +1,6 @@
 package com.bebel.bdd.dto;
 
-import javax.persistence.Column;
-import javax.persistence.Entity;
-import javax.persistence.Id;
-import javax.persistence.Table;
+import javax.persistence.*;
 import java.io.Serializable;
 
 @Entity
@@ -17,6 +14,8 @@ public class YouLoseDto implements Serializable {
   @Id
   @Column(name="SAVE_TYPE", updatable = false, nullable = false)
   private String type;
+
+  @Lob
   @Column(name="SAVE", nullable = false)
   private String save;
 
