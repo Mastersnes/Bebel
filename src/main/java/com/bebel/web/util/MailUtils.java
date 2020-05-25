@@ -32,7 +32,7 @@ public class MailUtils extends Thread {
                     .field("from", "lesjeuxdebebel.contact@gmail.com")
                     .field("to", "lesjeuxdebebel.contact@gmail.com")
                     .field("subject", subject)
-                    .field("text", message)
+                    .field("html", message)
                     .asJson();
 
             LOGGER.info("---Mail---");

@@ -18,6 +18,8 @@ import org.thymeleaf.util.StringUtils;
 
 import java.util.Base64;
 
+import static java.nio.charset.StandardCharsets.UTF_8;
+
 @Controller
 @RequestMapping("/samhain")
 public class SamhainController {
@@ -85,13 +87,13 @@ public class SamhainController {
             checkPass(request, true);
 
             final String encoded = request.getNewTrad();
-            final String decoded = new String(Base64.getDecoder().decode(encoded));
+            final String decoded = new String(Base64.getDecoder().decode(encoded.getBytes(UTF_8)));
             logger.info("Ajout de : " + decoded);
 
-            final StringBuilder message = new StringBuilder("Une proposition de traduction a été envoyé pour les textes suivants :")
-                    .append("</br>");
-
-            message.append(decoded);
+            final StringBuilder message = new StringBuilder()
+                    .append("Une proposition de traduction a été envoyé pour les textes suivants :")
+                    .append("</br>")
+                    .append(decoded);
 
             final MailUtils mailUtils = new MailUtils();
             mailUtils.sendMail("lesjeuxdebebel.contact@gmail.com",
