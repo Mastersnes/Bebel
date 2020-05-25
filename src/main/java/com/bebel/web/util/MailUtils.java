@@ -27,7 +27,7 @@ public class MailUtils extends Thread {
 
         try {
             LOGGER.info("Envoi du mail (api) " + api);
-            HttpResponse<JsonNode> request = Unirest.post("https://api.eu.mailgun.net/v3/" + domain + "/messages")
+            HttpResponse<JsonNode> request = Unirest.post("https://api.mailgun.net/v3/" + domain + "/messages")
                     .basicAuth("api", api)
                     .field("from", "lesjeuxdebebel.contact@gmail.com")
                     .field("to", "lesjeuxdebebel.contact@gmail.com")
