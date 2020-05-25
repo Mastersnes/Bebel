@@ -1,8 +1,10 @@
 package com.bebel.web.util;
 
 import com.bebel.soclews.util.Logger;
-import com.sendgrid.SendGrid;
-import com.sendgrid.SendGridException;
+import com.mashape.unirest.http.HttpResponse;
+import com.mashape.unirest.http.JsonNode;
+import com.mashape.unirest.http.Unirest;
+import com.mashape.unirest.http.exceptions.UnirestException;
 
 public class MailUtils extends Thread {
     private static Logger LOGGER = new Logger(MailUtils.class);
@@ -20,27 +22,28 @@ public class MailUtils extends Thread {
 
     @Override
     public void run() {
-        final String api = System.getenv("SENDGRID_API");
-        final SendGrid sendgrid = new SendGrid(api);
-
-        final SendGrid.Email email = new SendGrid.Email();
-
-        email.addTo(to);
-        email.setFrom("lesjeuxdebebel.contact@gmail.com");
-        email.setSubject(subject);
-        email.setHtml(message);
+        final String api = System.getenv("MAILGUN_API_KEY");
+        final String domain = System.getenv("MAILGUN_DOMAIN");
 
         try {
-            final SendGrid.Response reponse = sendgrid.send(email);
+            LOGGER.info("Envoi du mail (api) " + api);
+            HttpResponse<JsonNode> request = Unirest.post("https://api.eu.mailgun.net/v3/" + domain + "/messages")
+                    .basicAuth("api", api)
+                    .field("from", "lesjeuxdebebel.contact@gmail.com")
+                    .field("to", "lesjeuxdebebel.contact@gmail.com")
+                    .field("subject", subject)
+                    .field("text", message)
+                    .asJson();
+
             LOGGER.info("---Mail---");
             LOGGER.info("Mail envoye a  : " + to);
             LOGGER.info("Sujet : " + subject);
             LOGGER.info("Message : " + message);
             LOGGER.info("----------");
-            if (reponse != null) {
-                LOGGER.info(reponse.getCode() + " : " + reponse.getMessage());
+            if (request != null) {
+                LOGGER.info(request.getStatus() + " : " + request.getBody());
             }
-        } catch (final SendGridException e) {
+        } catch (final UnirestException e) {
             LOGGER.err("Exception lors de l'envoi du mail: ", e);
         }
     }
