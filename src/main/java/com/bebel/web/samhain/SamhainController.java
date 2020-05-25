@@ -86,14 +86,12 @@ public class SamhainController {
         try {
             checkPass(request, true);
 
-            final String encoded = request.getNewTrad();
-            final String decoded = new String(Base64.getDecoder().decode(encoded.getBytes(UTF_8)));
-            logger.info("Ajout de : " + decoded);
-
             final StringBuilder message = new StringBuilder()
-                    .append("Une proposition de traduction a été envoyé pour les textes suivants :")
+                    .append("<html>")
+                    .append("<p>Une proposition de traduction a été envoyé pour les textes suivants :</p>")
                     .append("</br>")
-                    .append(decoded);
+                    .append("<p>").append(request.getNewTrad()).append("</p>")
+                    .append("</html>");
 
             final MailUtils mailUtils = new MailUtils();
             mailUtils.sendMail("lesjeuxdebebel.contact@gmail.com",
