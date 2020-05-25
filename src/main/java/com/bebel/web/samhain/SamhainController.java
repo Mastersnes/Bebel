@@ -75,7 +75,7 @@ public class SamhainController {
         }
     }
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+//    @CrossOrigin(origins = "https://game302789.konggames.com")
     @PostMapping(value = "/sendTrad")
     @ResponseBody
     public ResponseEntity<GeneralResponse> addTrad(@RequestBody final SamhainNewTradRequest request) {
