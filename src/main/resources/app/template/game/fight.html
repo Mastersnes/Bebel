@@ -1,0 +1,55 @@
+<% var text = data.text %>
+<% var monsters = data.monsters %>
+
+<div>
+	<monstersContainer>
+		<monsters>
+			<% for (var i in monsters) { %>
+				<% var monster = monsters[i]; %>
+				<% if (monster.get("life.current") <= 0) continue; %>
+				<monster id="<%=i%>" class="<%=monster.name%> <%=monster.type%>" suffixe="<%=monster.suffixe.namem%>">
+					<cible></cible>
+					<jauge class="life">
+						<max></max>
+						<current></current>
+					</jauge>
+					<jauge class="mana">
+						<max></max>
+						<current></current>
+					</jauge>
+					<name class="js-center"><%=monster.completeName()%></name>
+					<anim></anim>
+					<etats>
+						<etat id="debuff"></etat>
+						<etat id="buff"></etat>
+					</etats>
+					<miss></miss>
+				</monster>
+			<% } %>
+		</monsters>
+	</monstersContainer>
+	<actionsContainer class="actionsContainer">
+		<actions>
+			<action id="0" state="new" class="gauche">
+				<name class="js-center"></name>
+			</action>
+			<action id="1" state="new" class="gauche">
+				<name class="js-center"></name>
+			</action>
+			<action id="2" state="new" class="gauche">
+				<name class="js-center"></name>
+			</action>
+			<action id="3" state="new" class="droite">
+				<name class="js-center"></name>
+			</action>
+			<action id="4" state="new" class="droite">
+				<name class="js-center"></name>
+			</action>
+		</actions>
+	</actionsContainer>
+	<textContainer>
+		<mask></mask>
+		<textes>
+		</textes>
+	</textContainer>
+</div>

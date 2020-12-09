@@ -1,0 +1,2 @@
+define("app/utils/utils app/data/stories/didacticiel app/data/stories/tuto app/data/stories/suite app/data/stories/quetes app/data/stories/gameOver".split(" "),function(c,d,e,f,g,h){var k={gagne:{textes:["gagne-texte-1","followUs","followUs2","followUs3","retry"],actions:[{name:"restart-action",action:[{key:"restart",params:null}]}]}};return{get:function(b){var a=k[b];a||(a=d.get(b));a||(a=e.get(b));a||(a=f.get(b));a||(a=g.get(b));a||(a=h.get(b));a||console.log("Erreur, Impossible de trouver l'histoire",
+b);return c.clone(a)}}});

@@ -1,0 +1,100 @@
+<% var text = data.text; %>
+<% var player = data.player; %>
+
+<% var level = player.get("level"); %>
+<% var xp = player.get("xp"); %>
+<% var palier = player.levelManager.nextPalier(); %>
+<% var xpRestant = palier - xp; %>
+<% var gold = player.get("gold"); %>
+
+<% var life = player.get("life"); %>
+<% var mana = player.get("mana"); %>
+
+<% var attaque = player.get("attaque"); %>
+<% var defense = player.get("defense"); %>
+<% var consos = data.consos; %>
+
+<div>
+    <mask class="canClose"></mask>
+    <contour class="canClose">
+        <close class="canClose"></close>
+        <content class="infos">
+            <profil>
+                <info class="level"><%=text.get("aventurier")%> <%=text.get("level")%> <%=level%></info>
+                <info class="xp"><%=xpRestant%> <%=text.get("pointDexperienceAvantNext")%></info>
+                <info class="gold"><%=gold%> <%=text.get("pieceDor")%></info>
+
+                <info></info>
+                <info class="life"><span>x</span> / <%=life.max%> <%= text.get("pointDeVie")%></info>
+                <info class="debuff">-<span class="amount">x</span> <%=text.get("pendant")%> <span class="duree">x</span><%=text.get("tours")%></info>
+                <info class="buff">+<span class="amount">x</span> <%=text.get("pendant")%> <span class="duree">x</span><%=text.get("tours")%></info>
+                <info class="mana"><span>x</span> / <%=mana.max%> <%= text.get("pointDeMana")%></info>
+
+                <info></info>
+                <info class="attaque"><%=attaque%> <%=text.get("pointDattaque")%></info>
+                <info class="arme">+<span>x</span> <%=text.get("bonusArme")%></info>
+                <info class="lifeSteal">+<span>x</span> <%=text.get("pointVolDeVie")%></info>
+                <info class="manaSteal">+<span>x</span> <%=text.get("pointVolDeMana")%></info>
+
+                <info></info>
+                <info class="defense"><%=defense%> <%=text.get("pointDeDefense")%></info>
+                <info class="bouclier">+<span>x</span> <%=text.get("bonusBouclier")%></info>
+            </profil>
+        </content>
+        <content class="equipment">
+            <armes>
+                <% var alreadyCoche = false; %>
+                <% var armes = player.get("equipment.arme"); %>
+                <% var current = player.get("equipment.currentArme"); %>
+                <% for (var i in armes) { %>
+                    <% var arme = armes[i]; %>
+                    <element id="<%=arme%>">
+                        <% if (current == arme && !alreadyCoche) { %>
+                            <case class="coche"></case>
+                            <% alreadyCoche = true; %>
+                        <% } else {%>
+                            <case></case>
+                        <% } %>
+                        <span><%=text.get(arme)%></span>
+                    </element>
+                <% } %>
+            </armes>
+            <boucliers>
+                <% alreadyCoche = false; %>
+                <% var boucliers = player.get("equipment.bouclier"); %>
+                <% var current = player.get("equipment.currentBouclier"); %>
+                <% for (var i in boucliers) { %>
+                    <% var bouclier = boucliers[i]; %>
+                    <element id="<%=bouclier%>">
+                        <% if (current == bouclier && !alreadyCoche) { %>
+                            <case class="coche"></case>
+                            <% alreadyCoche = true; %>
+                        <% } else { %>
+                            <case></case>
+                        <% } %>
+                        <span><%=text.get(bouclier)%></span>
+                    </element>
+                <% } %>
+            </boucliers>
+            <magies>
+                <% var magies = player.get("equipment.magie"); %>
+                <% for (var i in magies) { %>
+                    <% var magie = magies[i]; %>
+                    <element id="<%=magie%>"><%=text.get(magie)%></element>
+                <% } %>
+            </magies>
+            <consos>
+                <% var keys = consos.keys(); %>
+                <% for (var i in keys) { %>
+                    <% var conso = keys[i]; %>
+                    <% var number = consos.get(conso); %>
+                    <% if (number == 1) { %>
+                        <element id="<%=conso%>" nb="1"><%=text.get(conso)%></element>
+                    <% } else { %>
+                        <element id="<%=conso%>" nb="<%=number%>"><%=text.get(conso)%>(x<%=number%>)</element>
+                    <% } %>
+                <% } %>
+            </consos>
+        </content>
+    </contour>
+</div>

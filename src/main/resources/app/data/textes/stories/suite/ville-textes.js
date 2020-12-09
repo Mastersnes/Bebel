@@ -1,0 +1,2 @@
+define(["app/data/textes/stories/suite/ville/porte-textes","app/data/textes/stories/suite/ville/entree-textes","app/data/textes/stories/suite/ville/garde-textes","app/data/textes/stories/suite/ville/ruelle-textes","app/data/textes/stories/suite/ville/castagne-textes"],function(f,g,h,k,l){var c={};return{name:function(){return"Suite ville.js"},children:function(){return[f,g,h,k,l]},get:function(b){var a=c[b],d=this.children(),e;for(e in d)a||(a=d[e].get(b));return a},list:function(){var b=[],a;for(a in c)b.push(a);
+return b}}});

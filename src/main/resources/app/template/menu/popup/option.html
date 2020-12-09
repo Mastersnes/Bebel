@@ -1,0 +1,36 @@
+<% var text = data.text %>
+
+<div>
+	<mask class="canClose"></mask>
+	<contour class="canClose">
+		<close class="canClose"></close>
+		<content>
+			<fleches>
+				<son id="sound">
+					<text><%=text.get("sound")%></text>
+				</son>
+				<son id="music">
+					<text><%=text.get("music")%></text>
+				</son>
+				<flags>
+					<text><%=text.get("language")%></text>
+					<flag id="fr"></flag>
+					<flag id="eo"></flag>
+					<flag id="en"></flag>
+				</flags>
+			</fleches>
+			<selections>
+				<arme>
+					<element id="selectAuto">
+						<case></case>
+						<span><%=text.get("selectAuto")%></span>
+					</element>
+					<element id="cibleUnique">
+						<case></case>
+						<span><%=text.get("cibleUnique")%></span>
+					</element>
+				</arme>
+			</selections>
+		</content>
+	</contour>
+</div>

@@ -1,0 +1,14 @@
+<% var text = data.text %>
+
+<div class="popup">
+	<div>
+		<mask class="canClose"></mask>
+		<contour class="canClose">
+			<content>
+				<text class="title"><%= text.get(data.textePopup) %></text>
+				<text class="yes clickable"><%= text.get(data.texteYes) %></text>
+				<text class="no clickable"><%= text.get(data.texteNo) %></text>
+			</content>
+		</contour>
+	</div>
+</div>

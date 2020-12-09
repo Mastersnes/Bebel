@@ -1,0 +1,25 @@
+<% var text = data.text; %>
+
+<div>
+	<% var lieu = data.lieu; %>
+	<storyContainer>
+		<textes>
+			<% for(var i in lieu.textes) { %>
+				<texte><%= text.get(lieu.textes[i]) %></texte>
+			<% } %>
+		</textes>
+	</storyContainer>
+	<actionsContainer class="actionsContainer">
+		<actions>
+			<% for(var j in lieu.actions) { %>
+				<% var action = lieu.actions[j]; %>
+				<% if (!action.appairIf || data.view.checkActions(action.appairIf)) { %>
+
+					<action id="<%=j%>" type="<%=lieu.actions[j].name%>">
+						<name class="js-center"><%= text.get(lieu.actions[j].name) %></name>
+					</action>
+				<% } %>
+			<% } %>
+		</actions>
+	</actionsContainer>
+</div>

@@ -1,0 +1,2 @@
+define(["jquery","underscore","app/utils/utils","text!app/template/game/end.html","app/manager/sceneManager"],function(c,d,h,e,f){return function(g){this.init=function(a){this.el="#app";this.parent=a;this.Textes=a.Textes;this.mediatheque=a.mediatheque};this.render=function(a){d.templateSettings.variable="data";var b=d.template(e);a={text:this.Textes,gagne:a};c(this.el).html(b(a));this.scene=new f(this);this.makeEvents()};this.makeEvents=function(){var a=this;c(this.el).find("#reload").click(function(b){b.preventDefault();
+a.parent.resetGame()})};this.init(g)}});

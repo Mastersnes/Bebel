@@ -1,0 +1,37 @@
+<% var text = data.text %>
+<% var suffixes = data.suffixes %>
+
+<div>
+	<mask class="canClose"></mask>
+	<contour>
+		<close class="canClose"></close>
+
+		<div class="alphabet">
+			<marqueurs></marqueurs>
+		</div>
+
+		<div class="liste canClose">
+			<page class="gauche">
+				<propositions></propositions>
+			</page>
+			<page class="droite">
+				<propositions></propositions>
+			</page>
+		</div>
+
+		<div class="description canClose">
+			<page class="gauche">
+				<entete>
+					<titre></titre>
+					<suffixe id="selected"></suffixe>
+					<fleche>▼</fleche>
+				</entete>
+				<texte></texte>
+				<suffixes></suffixes>
+            </page>
+			<page class="droite">
+				<infos></infos>
+			</page>
+		</div>
+	</contour>
+</div>

@@ -1,0 +1,1 @@
+define([],function(){var b={sound:{fr:"SON",en:"SOUND",eo:"SONO"},music:{fr:"MUSIQUE",en:"MUSIC",eo:"MUZIKO"},language:{fr:"LANGUE",en:"LANGUAGE",eo:"LINGVO"}};return{name:function(){return"Options.js"},children:function(){return[]},get:function(a){return b[a]},list:function(){var a=[],c;for(c in b)a.push(c);return a}}});

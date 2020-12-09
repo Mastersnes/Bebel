@@ -1,0 +1,2 @@
+define("app/data/textes/stories/tuto/debut-textes app/data/textes/stories/tuto/nid-textes app/data/textes/stories/tuto/ferme-textes app/data/textes/stories/tuto/village-textes app/data/textes/stories/tuto/echoppe-textes app/data/textes/stories/tuto/crypte-textes".split(" "),function(f,g,h,k,l,m){var c={};return{name:function(){return"Tuto.js"},children:function(){return[f,g,h,k,l,m]},get:function(b){var a=c[b],d=this.children(),e;for(e in d)a||(a=d[e].get(b));return a},list:function(){var b=[],a;
+for(a in c)b.push(a);return b}}});

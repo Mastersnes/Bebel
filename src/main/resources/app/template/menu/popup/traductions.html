@@ -1,0 +1,38 @@
+<% var text = data.text %>
+
+<div>
+	<mask></mask>
+	<contour>
+		<content id="fichiers">
+			<close class="canClose"></close>
+			<wrapper>
+				<files></files>
+			</wrapper>
+		</content>
+		<content id="textes">
+			<close class="canClose"></close>
+
+			<langage id="source" class="selected">
+				<picture></picture>
+				<fleche>▼</fleche>
+			</langage>
+			<fromto></fromto>
+			<langage id="cible" class="selected">
+				<picture></picture>
+				<fleche>▼</fleche>
+			</langage>
+			<langages>
+				<langage name="fr"><picture></picture></langage>
+				<langage name="en"><picture></picture></langage>
+				<langage name="eo"><picture></picture></langage>
+			</langages>
+
+			<wrapper>
+				<textes></textes>
+			</wrapper>
+			<boutons>
+				<bouton id="send"><%=text.get("traduction-submit")%></bouton>
+			</boutons>
+		</content>
+	</contour>
+</div>

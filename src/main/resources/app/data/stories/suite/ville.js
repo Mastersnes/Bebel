@@ -1,0 +1,1 @@
+define(["app/data/stories/suite/ville/porte","app/data/stories/suite/ville/entree","app/data/stories/suite/ville/garde","app/data/stories/suite/ville/ruelle","app/data/stories/suite/ville/castagne"],function(c,d,e,f,g){var h={};return{get:function(b){var a=h[b];a||(a=c.get(b));a||(a=d.get(b));a||(a=e.get(b));a||(a=f.get(b));a||(a=g.get(b));return a}}});

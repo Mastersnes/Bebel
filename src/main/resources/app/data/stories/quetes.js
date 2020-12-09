@@ -1,0 +1,1 @@
+define(["app/data/stories/quetes/quete1"],function(c){var d={};return{get:function(b){var a=d[b];a||(a=c.get(b));return a}}});
