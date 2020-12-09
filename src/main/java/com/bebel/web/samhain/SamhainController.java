@@ -108,6 +108,12 @@ public class SamhainController {
         }
     }
 
+    @GetMapping("/play")
+    @ResponseBody
+    public String play() {
+        return "samhainPlay";
+    }
+
     private void checkPass(final KongregateRequest request) throws BadCredentialException {
         checkPass(request, false);
     }
