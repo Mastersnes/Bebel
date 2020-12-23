@@ -1,1 +1,146 @@
-.inventaire{display:block;position:absolute;width:100%;height:100%;left:0;top:0;z-index:10;font-family:"Luna"}.inventaire close{display:block;position:absolute;width:5%;height:5%;left:86.5%;top:1.5%;background-repeat:no-repeat;background-image:url("../img/game/interface/bouton/close_inventaire.png");background-size:100% 100%;transition:all 1000ms}.inventaire close:hover{transform:rotate(12deg)}.inventaire div{width:100%;height:100%}.inventaire contour{display:block;position:relative;width:87%;height:100%;top:1%;margin-left:auto;margin-right:auto;text-align:center;background-repeat:no-repeat;background-image:url("../img/game/interface/inventaire.png");background-size:100% 100%}.inventaire content{display:block;position:absolute}.inventaire content.infos{width:35.3%;height:79.3%;top:7%;left:8.7%}.inventaire profil{display:block;position:absolute;left:22%;top:8%;width:74%;height:85%;text-align:left;font-size:2.4vh}.inventaire profil info{display:block;position:relative;left:0;top:0;width:100%;height:4.5%;margin-top:.25%}.inventaire profil info:empty{height:4%!important;margin-top:1%!important}.inventaire profil info.debuff,.inventaire profil info.buff,.inventaire profil info.arme,.inventaire profil info.bouclier,.inventaire profil info.lifeSteal,.inventaire profil info.manaSteal{left:14%}.inventaire profil info.xp{height:auto!important}.inventaire content.equipment{width:37.3%;height:72%;top:8.5%;left:52.8%;overflow:hidden}.inventaire .equipment armes,.inventaire .equipment boucliers,.inventaire .equipment magies,.inventaire .equipment consos{position:absolute;display:block;overflow:hidden}.inventaire .equipment armes{width:38%;height:41%;top:4%;left:5%;transform:rotate(-2deg);text-align:justify}.inventaire .equipment boucliers{width:39%;height:41%;top:4%;left:53%;transform:rotate(-2deg);text-align:justify}.inventaire .equipment armes element,.inventaire .equipment boucliers element{cursor:pointer}.inventaire .equipment magies{width:42%;height:35%;top:60%;left:1%;transform:rotate(-1deg)}.inventaire .equipment consos{width:43%;height:41%;top:58%;left:55%;transform:rotate(-1deg)}.inventaire .equipment element{position:relative;display:block;width:100%;height:10%;margin-bottom:2%;font-size:2.5vh}.inventaire .equipment element#bouclierBois,.inventaire .equipment element#bouclierFer{font-size:2vh}.inventaire .equipment case{position:relative;display:inline-block;width:14%;height:100%;top:20%;left:0;background-repeat:no-repeat;background-image:url("../img/game/interface/ui/checkbox.png");background-size:300% 100%;background-position:0 0}.inventaire .equipment case.coche{background-position:50% 0}.inventaire .equipment element.clickable{font-weight:bold}.inventaire .equipment element.interdit{text-decoration:line-through}
+/**
+* Inventaire
+**/
+.inventaire {
+    display : block; position: absolute;
+    width: 100%; height: 100%;
+    left: 0; top: 0%;
+    z-index: 10;
+    font-family: "Luna";
+}
+.inventaire close {
+    display : block; position: absolute;
+    width: 5%; height: 5%;
+    left: 86.5%; top: 1.5%;
+    background-repeat: no-repeat;
+    background-image: url("../img/game/interface/bouton/close_inventaire.png");
+    background-size: 100% 100%;
+    transition: all 1000ms;
+}
+.inventaire close:hover {
+    transform: rotate(12deg);
+}
+.inventaire div {
+    width: 100%; height: 100%;
+}
+.inventaire contour {
+    display: block; position: relative;
+    width: 87%; height: 100%;
+    top: 1%;
+    margin-left: auto;
+    margin-right: auto;
+    text-align: center;
+    background-repeat: no-repeat;
+    background-image: url("../img/game/interface/inventaire.png");
+    background-size: 100% 100%;
+}
+
+.inventaire content {
+    display: block; position: absolute;
+}
+
+/**
+* Gauche - Infos
+**/
+.inventaire content.infos {
+    width: 35.3%; height: 79.3%;
+    top: 7%; left: 8.7%;
+}
+.inventaire profil {
+    display: block; position: absolute;
+    left: 22%; top: 8%;
+    width: 74%; height: 85%;
+    text-align: left;
+    font-size: 2.4vh;
+}
+.inventaire profil info {
+    display: block; position: relative;
+    left: 0%; top: 0%;
+    width: 100%; height: 4.5%;
+    margin-top: 0.25%;
+}
+.inventaire profil info:empty {
+    height: 4% !important;
+    margin-top: 1% !important;
+}
+
+/** Elements secondaires **/
+.inventaire profil info.debuff, .inventaire profil info.buff,
+.inventaire profil info.arme, .inventaire profil info.bouclier,
+.inventaire profil info.lifeSteal, .inventaire profil info.manaSteal {
+    left: 14%;
+}
+.inventaire profil info.xp {
+    height: auto !important;
+}
+
+/**
+* Droite - Equipment
+**/
+.inventaire content.equipment {
+    width: 37.3%; height: 72%;
+    top: 8.5%; left: 52.8%;
+    overflow: hidden;
+}
+
+.inventaire .equipment armes, .inventaire .equipment boucliers,
+.inventaire .equipment magies, .inventaire .equipment consos {
+    position: absolute; display: block;
+    overflow: hidden;
+}
+
+.inventaire .equipment armes {
+    width: 38%; height: 41%;
+    top: 4%; left: 5%;
+    transform: rotate(-2deg);
+    text-align: justify;
+}
+.inventaire .equipment boucliers {
+    width: 39%; height: 41%;
+    top: 4%; left: 53%;
+    transform: rotate(-2deg);
+    text-align: justify;
+}
+.inventaire .equipment armes element, .inventaire .equipment boucliers element {
+    cursor: pointer;
+}
+.inventaire .equipment magies {
+    width: 42%; height: 35%;
+    top: 60%; left: 1%;
+    transform: rotate(-1deg);
+}
+.inventaire .equipment consos {
+    width: 43%; height: 41%;
+    top: 58%; left: 55%;
+    transform: rotate(-1deg);
+}
+
+.inventaire .equipment element {
+    position: relative; display: block;
+    width: 100%; height: 10%;
+    margin-bottom: 2%;
+    font-size: 2.5vh;
+}
+.inventaire .equipment element#bouclierBois, .inventaire .equipment element#bouclierFer {
+    font-size: 2vh;
+}
+
+.inventaire .equipment case {
+    position: relative; display: inline-block;
+    width: 14%; height: 100%;
+    top: 20%; left: 0;
+    background-repeat: no-repeat;
+    background-image: url("../img/game/interface/ui/checkbox.png");
+    background-size: 300% 100%;
+
+    background-position: 0% 0%;
+}
+.inventaire .equipment case.coche {
+    background-position: 50% 0%;
+}
+.inventaire .equipment element.clickable {
+    font-weight: bold;
+}
+.inventaire .equipment element.interdit {
+    text-decoration: line-through;
+}

@@ -1,1 +1,32 @@
-define(["app/data/textes/stories/tuto/nid/entree-textes","app/data/textes/stories/tuto/nid/gauche-textes","app/data/textes/stories/tuto/nid/droite-textes"],function(f,g,h){var c={};return{name:function(){return"Tuto Nid.js"},children:function(){return[f,g,h]},get:function(b){var a=c[b],d=this.children(),e;for(e in d)a||(a=d[e].get(b));return a},list:function(){var b=[],a;for(a in c)b.push(a);return b}}});
+'use strict';
+define([
+    "app/data/textes/stories/tuto/nid/entree-textes",
+    "app/data/textes/stories/tuto/nid/gauche-textes",
+    "app/data/textes/stories/tuto/nid/droite-textes",
+], function(Entree, Gauche, Droite){
+	var data = {
+	};
+
+	return {
+        name : function() {
+            return "Tuto Nid.js";
+        },
+        children : function() {
+            return [Entree, Gauche, Droite];
+        },
+        get : function(key) {
+            var text = data[key];
+            var children = this.children();
+            for (var i in children) {
+                if (!text) text = children[i].get(key);
+                else continue;
+            }
+            return text;
+        },
+        list : function() {
+            var keys = [];
+            for (var i in data) {keys.push(i);}
+            return keys;
+        }
+    };
+});

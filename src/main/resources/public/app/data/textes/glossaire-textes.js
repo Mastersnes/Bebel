@@ -1,2 +1,50 @@
-define([],function(){var b={"lifeSteal-glossaire":{fr:"% des dégâts infligés.",en:"% of inflicted damages.",eo:"% da damaĝoj kaŭzitaj."},"lifeSteal2-glossaire":{fr:"% des PV actuels de la cible.",en:"% of the target’s currents HP.",eo:"% da nunaj VP de la celo."},"manaSteal-glossaire":{fr:"% des PM actuels de la cible.",en:"% of the target’s currents MP.",eo:"% da nunaj MP de la celo."},"lifeGain-glossaire":{fr:"% de la vie max.",en:"% of max life.",eo:"% da maks. vivo."},"manaGain-glossaire":{fr:"% du mana max.",
-en:"% of max mana.",eo:"% da maks. magio."}};return{name:function(){return"Glossaire.js"},children:function(){return[]},get:function(a){return b[a]},list:function(){var a=[],c;for(c in b)a.push(c);return a}}});
+'use strict';
+define([], function(){
+	var data = {
+	        /**
+	        * Glossaire
+	        **/
+	        "lifeSteal-glossaire" : {
+            	fr : "% des dégâts infligés.",
+            	en : "% of inflicted damages.",
+            	eo : "% da damaĝoj kaŭzitaj."
+            },
+            "lifeSteal2-glossaire" : {
+            	fr : "% des PV actuels de la cible.",
+            	en : "% of the target’s currents HP.",
+            	eo : "% da nunaj VP de la celo."
+            },
+            "manaSteal-glossaire" : {
+            	fr : "% des PM actuels de la cible.",
+            	en : "% of the target’s currents MP.",
+            	eo : "% da nunaj MP de la celo."
+            },
+            "lifeGain-glossaire" : {
+            	fr : "% de la vie max.",
+            	en : "% of max life.",
+            	eo : "% da maks. vivo."
+            },
+            "manaGain-glossaire" : {
+            	fr : "% du mana max.",
+            	en : "% of max mana.",
+            	eo : "% da maks. magio."
+            },
+	};
+	
+	return {
+        name : function() {
+            return "Glossaire.js";
+        },
+        children : function() {
+            return [];
+        },
+        get : function(key) {
+            return data[key];
+        },
+        list : function() {
+            var keys = [];
+            for (var i in data) {keys.push(i);}
+            return keys;
+        }
+    };
+});

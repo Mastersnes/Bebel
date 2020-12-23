@@ -1,3 +1,81 @@
-define(["jquery","app/utils/utils","app/data/kongregateStats","kongregate"],function(g,c,e){return function(f){this.init=function(a){this.Textes=a;this.isLoad=!1;this.username=null;this.isGuest=!0};this.load=function(a){var b=this;kongregateAPI.loadAPI(function(){b.isLoad=!0;b.kongregate=kongregateAPI.getAPI();b.makeEvents();a.call()})};this.render=function(){};this.score=function(a,b){this.isLoad&&(b=this.redresseInt(b),this.kongregate.stats.submit(a,b))};this.redresseInt=function(a){return a?a>
-Math.pow(10,15)?Math.pow(10,15):a:0};this.getScore=function(a){var b=this;a=e.get(a);if(!(this.isLoad&&this.username&&a))return null;c.load("https://api.kongregate.com/api/high_scores/lifetime/"+a+".json",null,function(a){if(!a)return null;for(var c in a.lifetime_scores){var d=a.lifetime_scores[c];if(d.username==b.username)return d.score}return null})};this.makeEvents=function(){var a=this;this.kongregate.services.addEventListener("login",function(){a.resolve();a.render()});this.resolve();this.render()};
-this.resolve=function(){this.username=this.kongregate.services.getUsername();this.isGuest=this.kongregate.services.isGuest();if(null==this.isGuest||void 0==this.isGuest)this.isGuest=!0;console.log("Kongregate username changed to: "+this.username)};this.login=function(){this.isLoad&&this.isGuest&&this.kongregate.services.showRegistrationBox()};this.init(f)}});
+'use strict';
+define(["jquery", "app/utils/utils", "app/data/kongregateStats", "kongregate"], function($, Utils, Stats){
+	return function(Textes){
+		this.init = function(Textes) {
+			this.Textes = Textes;
+			this.isLoad = false;
+			this.username = null;
+			this.isGuest = true;
+		};
+		
+		this.load = function(callback) {
+			var that = this;
+            kongregateAPI.loadAPI(function(){
+			    that.isLoad = true;
+            	that.kongregate = kongregateAPI.getAPI();
+            	that.makeEvents();
+			    callback.call();
+			});
+		};
+		
+		this.render = function() {
+			if (!this.isLoad) return;
+		};
+		
+		this.score = function(key, value) {
+			if (!this.isLoad) return;
+			
+			value = this.redresseInt(value);
+			this.kongregate.stats.submit(key, value);
+		};
+		
+		this.redresseInt = function(val) {
+			if (!val) return 0;
+			if (val > Math.pow(10, 15)) return Math.pow(10, 15);
+			return val;
+		};
+		
+		this.getScore = function(key) {
+			var that = this;
+			var statId = Stats.get(key);
+			if (!(this.isLoad && this.username && statId)) return null;
+			
+			Utils.load("https://api.kongregate.com/api/high_scores/lifetime/"+statId+".json", null, function(data) {
+				if (!data) return null;
+				for (var index in data.lifetime_scores) {
+					var scoreData = data.lifetime_scores[index];
+					if (scoreData.username == that.username) {
+						return scoreData.score;
+					}
+				}
+				return null;
+			});
+		};
+		
+		this.makeEvents = function() {
+			var that = this;
+			this.kongregate.services.addEventListener('login', function(){
+				that.resolve();
+            	that.render();
+            });
+            this.resolve();
+            this.render();
+		};
+		
+		this.resolve = function() {
+			this.username = this.kongregate.services.getUsername();
+        	this.isGuest = this.kongregate.services.isGuest();
+        	if (this.isGuest == null || this.isGuest == undefined) this.isGuest = true;
+        	console.log('Kongregate username changed to: ' + this.username);
+		};
+		
+		this.login = function() {
+			if (!this.isLoad) return;
+			if (!this.isGuest) return;
+			
+			this.kongregate.services.showRegistrationBox();
+		};
+		
+		this.init(Textes);
+	};
+});

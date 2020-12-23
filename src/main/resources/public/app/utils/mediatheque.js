@@ -1,5 +1,155 @@
-define(["jquery","app/utils/utils"],function(e,c){return function(){this.sounds=[];this.callbacks=[];this.soundsTicker=[];this.listStories=["music/story1.mp3","music/story2.mp3","music/story3.mp3"];this.loadAll=function(){var a=this.listStories,b;for(b in a)this.load(a[b]);this.isMuteMusic=window.localStorage.getItem(c.name+"Music");this.isMuteMusic&&"false"!=this.isMuteMusic||(this.isMuteMusic=!1);this.isMuteSound=window.localStorage.getItem(c.name+"Sound");this.isMuteSound&&"false"!=this.isMuteSound||
-(this.isMuteSound=!1)};this.load=function(a,b,c){b||(b="");var d=this.sounds[a+b];d||(d=window.Audio?new Audio("app/"+a):new HTMLAudioElement("app/"+a),d.volume=1);-1<a.indexOf("music")&&(this.callbacks[a+b]&&d.removeEventListener("ended",this.callbacks[a+b]),this.callbacks[a+b]=function(){this.currentTime=0;c?c():this.play()},d.addEventListener("ended",this.callbacks[a+b],!1));d.load();this.sounds[a+b]=d};this.play=function(a,b,c){if(a){b||(b="");this.load(a,b,c);try{if(-1<a.indexOf("music")){this.currentMusic=
-a;if(this.isMuteMusic)return;this.stopAllMusic()}-1<a.indexOf("music")&&0<this.sounds[a+b].duration&&!this.sounds[a+b].paused||this.sounds[a+b].play()}catch(d){this.load(a,b)}}};this.playSound=function(a){a&&!this.isMuteSound&&(void 0==this.soundsTicker[a]&&(this.soundsTicker[a]=0),this.play("sounds/"+a,this.soundsTicker[a]++),3<this.soundsTicker[a]&&(this.soundsTicker[a]=0))};this.stopSound=function(a){a&&this.stop("sounds/"+a)};this.stop=function(a){if(a)try{this.sounds[a].pause(),this.sounds[a].currentTime=
-0}catch(b){}};this.stopAllMusic=function(){for(var a in this.sounds)-1<a.indexOf("music")&&this.stop(a)};this.mute=function(a){var b=this.isMuteMusic;switch(a){case "all":a=this.isMuteMusic&&this.isMuteSound;this.isMuteMusic=!a;this.isMuteSound=!a;break;case "music":this.isMuteMusic=!this.isMuteMusic;break;case "sound":this.isMuteSound=!this.isMuteSound}window.localStorage.setItem(c.name+"Music",this.isMuteMusic);window.localStorage.setItem(c.name+"Sound",this.isMuteSound);b!=this.isMuteMusic&&(this.isMuteMusic?
-this.stopAllMusic():this.play(this.currentMusic))};this.isMute=function(a){switch(a){case "all":return this.isMuteMusic&&this.isMuteSound;case "music":return this.isMuteMusic;case "sound":return this.isMuteSound}}}});
+'use strict';
+define(["jquery", "app/utils/utils"], function($, Utils){
+	return function(){
+		this.sounds = [];
+		this.callbacks = [];
+		this.soundsTicker = [];
+
+		this.listStories = ["music/story1.mp3", "music/story2.mp3", "music/story3.mp3"];
+
+		this.loadAll = function() {
+			var list = this.listStories;
+			for (var index in list) {
+				var key = list[index];
+				this.load(key);
+			}
+			
+			this.isMuteMusic = window.localStorage.getItem(Utils.name + "Music");
+			if (!this.isMuteMusic || this.isMuteMusic == "false") this.isMuteMusic = false;
+
+			this.isMuteSound = window.localStorage.getItem(Utils.name + "Sound");
+			if (!this.isMuteSound || this.isMuteSound == "false") this.isMuteSound = false;
+		};
+		
+		/**
+		* Permet de charger les sons
+		**/
+		this.load = function(key, id, callback) {
+			if (!id) id = "";
+			var sound = this.sounds[key + id];
+			if (!sound) {
+                if (window.Audio)
+                    sound = new Audio("app/"+key);
+                else
+                    sound = new HTMLAudioElement("app/"+key);
+                sound.volume=1;
+			}
+			if (key.indexOf("music") > -1) {
+				sound.volume=0.6;
+				if (this.callbacks[key + id]) {
+				    sound.removeEventListener("ended", this.callbacks[key + id]);
+				}
+				this.callbacks[key + id] = function() {
+                    this.currentTime = 0;
+                    if (callback) callback();
+                    else this.play();
+                };
+				sound.addEventListener('ended', this.callbacks[key + id], false);
+			}
+
+			sound.load();
+			this.sounds[key + id] = sound;
+		};
+		
+		/**
+		 * Joue le son et le creer s'il n'existe pas
+		 */
+		this.play = function(key, id, callback) {
+			if (!key) return;
+			if (!id) id = "";
+            this.load(key, id, callback);
+			try {
+				if (key.indexOf("music") > -1) {
+					this.currentMusic = key;
+					if (this.isMuteMusic) {
+						return;
+					}
+					this.stopAllMusic();
+				}
+				
+				// Si c'est une music est qu'elle est deja en cours, on ne la relance pas
+				if (key.indexOf("music") > -1 && 
+						this.sounds[key + id].duration > 0 &&
+						!this.sounds[key + id].paused)
+					return;
+				this.sounds[key + id].play();
+			}catch (e) {
+				this.load(key, id);
+			}
+		};
+
+		/**
+		 * Joue le son et le creer s'il n'existe pas
+		 */
+		this.playSound = function(key) {
+			if (!key) return;
+			if (this.isMuteSound) return;
+			if (this.soundsTicker[key] == undefined) this.soundsTicker[key] = 0;
+			this.play("sounds/"+key, this.soundsTicker[key]++);
+			if (this.soundsTicker[key] > 3) this.soundsTicker[key] = 0;
+		};
+		
+		this.stopSound = function(key) {
+			if (!key) return;
+			this.stop("sounds/"+key);
+		};
+		
+		this.stop = function(key) {
+			if (!key) return;
+			try {
+				this.sounds[key].pause();
+				this.sounds[key].currentTime = 0;
+			}catch (e) {
+				//this.load(key);
+			}
+		};
+		
+		this.stopAllMusic = function() {
+			for (var index in this.sounds) {
+				if (index.indexOf("music") > -1) {
+					this.stop(index);
+				}
+			}
+		};
+		
+		this.mute = function(type) {
+			var musicOldState = this.isMuteMusic;
+			switch(type) {
+				case "all" :
+					var allMute = this.isMuteMusic && this.isMuteSound;
+					this.isMuteMusic = !allMute;
+					this.isMuteSound = !allMute;
+					break;
+				case "music" :
+					this.isMuteMusic = !this.isMuteMusic;
+					break;
+				case "sound" :
+					this.isMuteSound = !this.isMuteSound;
+					break;
+				default:
+					break;
+			}
+			
+			window.localStorage.setItem(Utils.name + "Music", this.isMuteMusic);
+			window.localStorage.setItem(Utils.name + "Sound", this.isMuteSound);
+			
+			if (musicOldState != this.isMuteMusic) {
+				if (this.isMuteMusic) this.stopAllMusic();
+				else this.play(this.currentMusic);
+			}
+		};
+
+		this.isMute = function(type) {
+            switch(type) {
+                case "all" :
+                    return this.isMuteMusic && this.isMuteSound;
+                case "music" :
+                    return this.isMuteMusic;
+                case "sound" :
+                    return this.isMuteSound;
+                default:
+                    break;
+            }
+        };
+	};
+});

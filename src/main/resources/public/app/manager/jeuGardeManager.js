@@ -1,10 +1,366 @@
-define(["jquery","underscore","app/utils/viewUtils","app/utils/utils"],function(h,n,k,d){return function(l,m){this.init=function(a,b){this.el="";this.parent=a;this.Textes=a.Textes;this.playerData=a.playerData;this.type=b};this.initGame=function(){this.gold=2E3;this.clearMain();this.renderActions()};this.reset=function(){this.clearMain();this.firstMise=!0;"garde"==this.type&&(this.ia=-1<this.parent.tuto?1:d.rand(0,5))};this.clearMain=function(){this.main={"carte-0":null,"carte-1":null,"carte-2":null,
-"carte-3":null,"carte-4":null}};this.getGold=function(){return"garde"==this.type||-1<this.parent.tuto?this.gold:this.playerData.get("gold")};this.addGold=function(a){"garde"==this.type||-1<this.parent.tuto?this.gold+=a:this.playerData.addGold(a)};this.getFirstAction=function(){for(var a in this.main){var b=this.main[a];if(b&&-1<b.name.indexOf("-action"))return b}};this.getCarte=function(a){return this.main[a]};this.getPoints=function(){var a=0,b;for(b in this.main){var c=this.main[b];c&&("pomme"==
-c.name&&a++,"fromage"==c.name&&(a+=2),"potionSante"==c.name&&(a+=3))}return a};this.getRandCarte=function(){for(var a in this.main){var b=this.main[a];if(b&&d.rand(0,2))return b}return this.getFirstCarte()};this.getFirstCarte=function(){for(var a in this.main){var b=this.main[a];if(b)return b}};this.length=function(){var a=0,b;for(b in this.main)this.main[b]&&a++;return a};this.add=function(a,b,c){var f=!1,e;for(e in this.main)if(!this.main[e]){this.main[e]={id:e,name:a,visible:b};f=!0;break}var g=
-this;d.then(function(){g.renderActions();c&&c()},300);return f};this.remove=function(a,b){for(var c in this.main)if(c==a.id){this.main[c]=null;break}var f=this;d.then(function(){f.renderActions();b&&b()},300)};this.miser=function(){var a=this.type,b=this.parent.mise;this.firstMise&&(b=this.parent.startMise);if(this.getGold()<b)return this.parent.checkMise(),!1;if("garde"==a){if(this.parent.isPlayerTurn)return!1;this.parent.alert("garde-mise",null,[b])}else{if(!this.parent.isPlayerTurn||this.parent.lockMise)return!1;
-this.parent.alert("player-turn-2")}this.addGold(-b);this.parent.total+=b;this.parent.mise=this.firstMise?1:this.parent.mise+2;this.firstMise=!1;this.hasMise=!0;this.parent.checkMise();return!0};this.piocher=function(){if("garde"!=this.type){if(this.alreadyPioche)return console.log("Erreur, vous avez deja pioché"),!1;if(!this.hasMise)return console.log("Erreur, Impossible de piocher, le joueur n'a pas misé."),!1;if(!this.parent.isPlayerTurn)return console.log("Erreur, Impossible de piocher, ce n'est pas votre tour"),
-!1}this.alreadyPioche=!0;var a=this,b;b=3==this.parent.tuto?"garde"!=this.type?this.parent.pioche.indexOf("pokgard-voir-action"):this.parent.pioche.indexOf("pomme"):d.rand(0,this.parent.pioche.length);b=this.parent.pioche.splice(b,1)[0];if(5>this.length())this.add(b);else return!1;this.parent.checkGameOver()||d.then(function(){"garde"==a.type?a.parent.playerTurn():a.parent.gardeTurn()});return!0};this.use=function(a,b,c){if(!a||-1==a.name.indexOf("-action")||a.used)return c&&c(),!1;a.used=!0;var f=
-this,e=this.parent.garde;if("garde"==this.type){var g=this.Textes.get(a.name);this.parent.alert("garde-use",null,[g]);e=this.parent.player;b=this.parent.player.getRandCarte()}else if(!b)return c||c(),!1;this.remove(a,function(){d.then(function(){switch(a.name){case "pokgard-voir-action":if(!f.parent.isPlayerTurn){c&&c();break}b.visible=!0;e.renderActions();c&&c();break;case "pokgard-voler-action":e.remove(b);f.add(b.name,!0,function(){c&&c()});break;case "pokgard-detruire-action":e.remove(b,function(){c&&
-c()});break;default:c&&c()}},300)});this.parent.closePending()};this.recursiveUse=function(a,b){var c=this;5>a?this.use(this.main["carte-"+a],null,function(){c.recursiveUse(a+1,b)}):d.then(b)};this.montre=function(){for(var a in this.main){var b=this.main[a];b&&(b.visible=!0)}var c=this;d.then(function(){c.renderActions()},300)};this.renderActions=function(){var a=this.parent.el,b=a.find("#playerActions"),c=this.main,f="150%";"garde"==this.type&&(b=a.find("#gardeActions"),f="-150%");b.find("action").attr("vide",
-"vide");for(var e in c)if(c[e]){var a=c[e],g=b.find("action[id\x3d'"+e+"']");h(g).removeAttr("vide");"garde"!=this.type||a.visible?(h(g).find("name").html(this.Textes.get(a.name)),h(g).attr("type",a.name)):(h(g).find("name").html("???"),h(g).attr("type",""));h(g).animate({top:"0"},300)}d.then(function(){b.find("action[vide]").each(function(a,b){h(b).animate({top:f},300,function(){h(b).find("name").html("");h(b).attr("type","")})});k.verticalCenter()},100);"garde"!=this.type&&this.parent.refreshScore()};
-this.manageIA=function(){var a=this;switch(this.ia){case 0:d.rand(0,2)&&this.miser();case 1:this.piocher();break;case 2:d.rand(0,2)&&this.miser();case 3:this.use(this.getFirstAction(),null,function(){a.piocher()});break;case 4:d.rand(0,2)&&this.miser();case 5:this.recursiveUse(0,function(){a.piocher()})}};this.init(l,m)}});
+/*global define */
+define(["jquery",
+        'underscore',
+        "app/utils/viewUtils",
+        "app/utils/utils"],
+function($, _, ViewUtils, Utils) {
+	'use strict';
+
+	return function(parent, type) {
+		this.init = function(parent, type) {
+			this.el = "";
+			this.parent = parent;
+			this.Textes = parent.Textes;
+			this.playerData = parent.playerData;
+			this.type = type;
+		};
+
+		/**
+		* Initialisation du jeu
+		**/
+		this.initGame = function() {
+            this.gold = 2000;
+			this.clearMain();
+			this.renderActions();
+		};
+		this.reset = function() {
+		    this.clearMain();
+		    this.firstMise = true;
+
+		    if (this.type == "garde") {
+		        if (this.parent.tuto > -1) this.ia = 1;
+		        else this.ia = Utils.rand(0, 5);
+		    }
+		};
+		this.clearMain = function() {
+            this.main = {
+                "carte-0" : null,
+                "carte-1" : null,
+                "carte-2" : null,
+                "carte-3" : null,
+                "carte-4" : null,
+            };
+        };
+
+        /**
+        * Getter / Setter
+        **/
+        this.getGold = function() {
+            if (this.type == "garde" || this.parent.tuto > -1) {
+                return this.gold;
+            } else return this.playerData.get("gold");
+        };
+        this.addGold = function(amount) {
+            if (this.type == "garde" || this.parent.tuto > -1) {
+                this.gold += amount;
+            } else this.playerData.addGold(amount);
+        };
+        this.getFirstAction = function() {
+            for (var i in this.main) {
+                var carte = this.main[i];
+                if (!carte) continue;
+                if (carte.name.indexOf("-action") > -1) {
+                    return carte;
+                }
+            }
+        };
+        this.getCarte = function(carteId) {
+            return this.main[carteId];
+        };
+        this.getPoints = function() {
+            var points = 0
+            for (var i in this.main) {
+                var carte = this.main[i];
+                if (!carte) continue;
+                if (carte.name == "pomme") points++;
+                if (carte.name == "fromage") points+=2;
+                if (carte.name == "potionSante") points+=3;
+            }
+            return points;
+        };
+        this.getRandCarte = function() {
+            var first;
+            for (var i in this.main) {
+                var carte = this.main[i];
+                if (!carte) continue;
+                if (Utils.rand(0, 2)) return carte;
+            }
+            return this.getFirstCarte();
+        };
+        this.getFirstCarte = function() {
+            for (var i in this.main) {
+                var carte = this.main[i];
+                if (carte) return carte;
+            }
+        };
+        this.length = function() {
+            var l = 0;
+            for (var i in this.main) {
+                if (this.main[i]) l++;
+            }
+            return l;
+        };
+
+        this.add = function(name, visible, then) {
+            var result = false;
+            for (var i in this.main) {
+                if (!this.main[i]) {
+                    this.main[i] = {
+                        "id" : i,
+                        "name" : name,
+                        "visible" : visible
+                    };
+                    result = true;
+                    break;
+                }
+            }
+
+            var that = this;
+            Utils.then(function() {
+                that.renderActions();
+                if (then) then();
+            }, 300);
+
+            return result;
+        };
+        this.remove = function(actionToRemove, then) {
+            for (var i in this.main) {
+                if (i == actionToRemove.id) {
+                    this.main[i] = null;
+                    break;
+                }
+            }
+
+            var that = this;
+            Utils.then(function() {
+                that.renderActions();
+                if (then) then();
+            }, 300);
+        };
+
+        /**
+        * Actions
+        **/
+        this.miser = function() {
+            var type = this.type;
+            var mise = this.parent.mise;
+            if (this.firstMise) mise = this.parent.startMise;
+
+            if (this.getGold() < mise) {
+                this.parent.checkMise();
+                return false;
+            }
+            if (type == "garde") {
+                if (this.parent.isPlayerTurn) return false;
+                this.parent.alert("garde-mise", null, [mise]);
+            }else {
+                if (!this.parent.isPlayerTurn) return false;
+                if (this.parent.lockMise) return false;
+                this.parent.alert("player-turn-2");
+            }
+
+            this.addGold(-mise);
+            this.parent.total += mise;
+            if (this.firstMise) this.parent.mise = 1;
+            else this.parent.mise += 2;
+
+            this.firstMise = false;
+            this.hasMise = true;
+            this.parent.checkMise();
+            return true;
+        };
+
+        this.piocher = function() {
+            if (this.type != "garde") {
+                if (this.alreadyPioche) {
+                    console.log("Erreur, vous avez deja pioché");
+                    return false;
+                }
+                if (!this.hasMise) {
+                    console.log("Erreur, Impossible de piocher, le joueur n'a pas misé.");
+                    return false;
+                }
+                if (!this.parent.isPlayerTurn) {
+                    console.log("Erreur, Impossible de piocher, ce n'est pas votre tour");
+                    return false;
+                }
+            }
+
+            this.alreadyPioche = true;
+
+            var that = this;
+            var pioche = this.parent.pioche;
+
+            var randId;
+            if (this.parent.tuto == 3) {
+                if (this.type != "garde") randId = this.parent.pioche.indexOf("pokgard-voir-action");
+                else randId = this.parent.pioche.indexOf("pomme");
+            } else randId = Utils.rand(0, this.parent.pioche.length);
+
+            var randAction = this.parent.pioche.splice(randId, 1)[0];
+
+            if (this.length() < 5) this.add(randAction);
+            else return false;
+
+            if (!this.parent.checkGameOver()) {
+                Utils.then(function() {
+                    if (that.type == "garde") that.parent.playerTurn();
+                    else that.parent.gardeTurn();
+                });
+            }
+
+            return true;
+        };
+        this.use = function(action, cible, then) {
+            if (!action || action.name.indexOf("-action") == -1 || action.used) {
+                if (then) then();
+                return false;
+            }
+            action.used = true;
+
+            var that = this;
+
+            var adversaire = this.parent.garde;
+            if (this.type == "garde") {
+                var actionName = this.Textes.get(action.name);
+                this.parent.alert("garde-use", null, [actionName]);
+                adversaire = this.parent.player;
+                cible = this.parent.player.getRandCarte();
+            }else if (!cible) {
+                if (!then) then();
+                return false;
+            }
+
+            this.remove(action, function() {
+                Utils.then(function() {
+                    switch(action.name) {
+                        case "pokgard-voir-action":
+                            if (!that.parent.isPlayerTurn) {
+                                if (then) then();
+                                break;
+                            }
+                            cible.visible = true;
+                            adversaire.renderActions();
+                            if (then) then();
+                            break;
+                        case "pokgard-voler-action":
+                            adversaire.remove(cible);
+                            that.add(cible.name, true, function() {
+                                if (then) then();
+                            });
+                            break;
+                        case "pokgard-detruire-action":
+                            adversaire.remove(cible, function() {
+                                if (then) then();
+                            });
+                            break;
+                        default:
+                            if (then) then();
+                            break;
+                    }
+                }, 300);
+            });
+
+            this.parent.closePending();
+        };
+        this.recursiveUse = function(id, callbackFinal) {
+            var that = this;
+            if (id < 5) {
+                this.use(this.main["carte-"+id], null, function() {
+                    that.recursiveUse(id+1, callbackFinal);
+                });
+            }else Utils.then(callbackFinal);
+        };
+
+        this.montre = function() {
+            for (var i in this.main) {
+                var carte = this.main[i];
+                if (carte) carte.visible = true;
+            }
+            var that = this;
+            Utils.then(function() {
+                that.renderActions();
+            }, 300);
+        };
+
+        /**
+        * Render
+        **/
+        this.renderActions = function() {
+            var that = this;
+            var el = this.parent.el;
+
+            var dom = el.find("#playerActions");
+            var cartes = this.main;
+            var top = "150%";
+            if (this.type == "garde") {
+                dom = el.find("#gardeActions");
+                top = "-150%";
+            }
+
+            dom.find("action").attr("vide", "vide");
+            for (var i in cartes) {
+                if (!cartes[i]) continue;
+
+                var carte = cartes[i];
+                var elmt = dom.find("action[id='"+i+"']");
+                $(elmt).removeAttr("vide");
+                if (that.type == "garde" && !carte.visible) {
+                    $(elmt).find("name").html("???");
+                    $(elmt).attr("type", "");
+                }else {
+                    $(elmt).find("name").html(that.Textes.get(carte.name));
+                    $(elmt).attr("type", carte.name);
+                }
+                $(elmt).animate({"top" : "0"}, 300);
+            }
+            Utils.then(function() {
+                dom.find("action[vide]").each(function(idx, elmt) {
+                    $(elmt).animate({"top" : top}, 300, function() {
+                        $(elmt).find("name").html("");
+                        $(elmt).attr("type", "");
+                    });
+                });
+                ViewUtils.verticalCenter();
+            }, 100);
+
+            if (this.type != "garde") this.parent.refreshScore();
+        };
+
+        /**
+        * IA
+        **/
+        this.manageIA = function() {
+            var that = this;
+            switch(this.ia) {
+                // Garde gourmand impatient : Mise de nouveau, puis pioche
+                case 0:
+                    if (Utils.rand(0, 2)) this.miser();
+                // Garde Impatient simple : Pioche simplement
+                case 1:
+                    this.piocher();
+                    break;
+                // Garde gourmand rapide : Mise de nouveau, utilise sa premiere action puis pioche
+                case 2:
+                    if (Utils.rand(0, 2)) this.miser();
+                // Garde Rapide simple : utilise sa premiere action puis pioche
+                case 3:
+                    this.use(this.getFirstAction(),  null, function() {
+                        that.piocher();
+                    });
+                    break;
+                // Garde gourmand malin : Mise de nouveau, utilise toute ses actions puis pioche
+                case 4:
+                    if (Utils.rand(0, 2)) this.miser();
+                // Garde Malin simple : utilise toute ses actions puis pioche
+                case 5:
+                    this.recursiveUse(0, function() {
+                        that.piocher();
+                    });
+                    break;
+            }
+        };
+
+		this.init(parent, type);
+	};
+});

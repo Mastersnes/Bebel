@@ -1,9 +1,233 @@
-define("jquery underscore app/utils/utils app/utils/map app/utils/viewUtils text!app/template/game/inventaire.html app/data/items".split(" "),function(b,h,g,k,n,l,d){return function(m){this.init=function(a){this.el=b(".inventaire");this.parent=a;this.Textes=a.Textes;this.mediatheque=a.mediatheque;this.kongregateUtils=a.kongregateUtils;this.saveManager=a.saveManager;this.recompenseManager=a.recompenseManager;this.player=a.playerManager;this.inventaireOpen=!1;this.el.hide()};this.initConsos=function(){this.consos=
-new k;var a=this.player.get("equipment.conso"),c;for(c in a){var e=a[c],b=this.consos.get(e);b?b++:b=1;this.consos.put(e,b)}};this.render=function(){h.templateSettings.variable="data";var a=h.template(l);this.el.html(a({text:this.Textes,player:this.player,consos:this.consos}));this.makeEvents()};this.show=function(a,c){this.inventaireOpen=!0;this.initConsos();this.player.arme();this.player.bouclier();this.render();this.el.fadeIn();this.refreshStats()};this.refreshStats=function(){this.refreshInfo(this.player.get("life").current,
-"life");this.refreshEtat(this.player.get("debuff"),"debuff");this.refreshEtat(this.player.get("buff"),"buff");this.refreshInfo(this.player.get("mana").current,"mana",this.player.get("unlockMana"));var a=this.player.arme();this.refreshInfo(a.degats[0]+"-"+a.degats[1],"arme");var c;if(a.lifeSteal){var b=this.player.get("attaque");c=Math.round(g.percent(b+a.degats[0],a.lifeSteal[0]));b=Math.round(g.percent(b+a.degats[1],a.lifeSteal[1]));c=c+"-"+b}this.refreshInfo(c,"lifeSteal");var f;a.manaSteal&&(f=
-a.manaSteal[0]+"-"+a.manaSteal[1]+"%");this.refreshInfo(f,"manaSteal");a=this.player.bouclier();this.refreshInfo(a.defense[0]+"-"+a.defense[1],"bouclier")};this.refreshInfo=function(a,c,b){void 0==b&&(b=void 0!=a);c=this.el.find("profil info."+c);b?(c.show(),c.find("span").html(a)):c.hide()};this.refreshEtat=function(a,c){var b=this.el.find("profil info."+c);if(a){b.show();var f;if(a.offensif)f=a.degats[0]+"-"+a.degats[1];else{var d=this.player.get("life").max;f=Math.round(g.percent(d,a.vie[0]));
-d=Math.round(g.percent(d,a.vie[1]));f=f+"-"+d}b.find("span.amount").html(f);b.find("span.duree").html(a.current)}else b.hide()};this.loop=function(){this.inventaireOpen&&(b("carnet").hasClass("hide")||b("carnet").addClass("hide"))};this.refreshConso=function(a){var c=this.Textes.get(a.attr("id")),b=parseInt(a.attr("nb"));1==b?a.html(c):a.html(c+"(x"+b+")")};this.refreshMagie=function(a){var b=a.attr("id"),b=d.get("magie",b),e=this.player.get("mana.current");a.removeClass("clickable");a.removeClass("interdit");
-b.offensif||(b.manaCost<=e?a.addClass("clickable"):a.addClass("interdit"))};this.makeEvents=function(){var a=this;this.el.find("armes element").click(function(){var c=b(this).find("case");c.hasClass("coche")||(a.el.find("armes case").removeClass("coche"),c.addClass("coche"),a.player.selectArme(b(this).attr("id")),a.refreshStats())});this.el.find("boucliers element").click(function(){var c=b(this).find("case");c.hasClass("coche")||(a.el.find("boucliers case").removeClass("coche"),c.addClass("coche"),
-a.player.selectBouclier(b(this).attr("id")),a.refreshStats())});this.el.find("magies element").hover(function(){a.refreshMagie(b(this))},function(){b(this).removeClass("clickable");b(this).removeClass("interdit")});this.el.find("consos element").hover(function(){var a=b(this).attr("id"),a=d.get("conso",a);b(this).html();b(this).removeClass("clickable");a.offensif||b(this).addClass("clickable")},function(){b(this).removeClass("clickable")});this.el.find("magies element").click(function(){var c=b(this).attr("id");
-d.get("magie",c).offensif||(a.player.spell(c),a.player.etatsManager.infligeEtats(),a.refreshStats(),a.refreshMagie(b(this)))});this.el.find("consos element").click(function(){var c=b(this).attr("id");if(!d.get("conso",c).offensif){a.player.use(c,null);var e=a.consos.get(c)-1;0>=e?(a.consos.remove(c),b(this).remove()):(a.consos.put(c,e),b(this).attr("nb",e),a.refreshConso(b(this)));a.player.etatsManager.infligeEtats();a.refreshStats()}});this.el.find(".canClose").click(function(c){b(c.target).hasClass("canClose")&&
-(a.inventaireOpen=!1,b("carnet").removeClass("hide"),a.el.fadeOut())})};this.init(m)}});
+'use strict';
+define(["jquery", "underscore",
+        "app/utils/utils",
+        "app/utils/map",
+        "app/utils/viewUtils",
+        "text!app/template/game/inventaire.html",
+        "app/data/items"
+        ], function($, _, Utils, HashMap, ViewUtsils, page, Items){
+    return function(parent){
+        this.init = function(parent) {
+        	this.el = $(".inventaire");
+
+            this.parent = parent;
+            this.Textes = parent.Textes;
+            this.mediatheque = parent.mediatheque;
+
+            // Manager
+            this.kongregateUtils = parent.kongregateUtils;
+            this.saveManager = parent.saveManager;
+            this.recompenseManager = parent.recompenseManager;
+            this.player = parent.playerManager;
+            this.inventaireOpen = false;
+
+            this.el.hide();
+        };
+
+        this.initConsos = function() {
+            this.consos = new HashMap();
+            var consosAvailables = this.player.get("equipment.conso")
+            for (var i in consosAvailables) {
+                var consoName = consosAvailables[i];
+                var conso = this.consos.get(consoName);
+                if (conso) conso++;
+                else conso = 1;
+
+                this.consos.put(consoName, conso);
+            }
+        };
+
+        this.render = function() {
+            _.templateSettings.variable = "data";
+            var template = _.template(page);
+            var templateData = {
+                    text : this.Textes,
+                    player : this.player,
+                    consos : this.consos
+            };
+            this.el.html(template(templateData));
+            this.makeEvents();
+        };
+
+        /**
+        * Lance la consultation
+        **/
+        this.show = function(key, isChange) {
+            this.inventaireOpen = true;
+            this.initConsos();
+            this.player.arme();
+            this.player.bouclier();
+            this.render();
+            this.el.fadeIn();
+            this.refreshStats();
+        };
+
+        this.refreshStats = function() {
+            this.refreshInfo(this.player.get("life").current, "life");
+            this.refreshEtat(this.player.get("debuff"), "debuff");
+            this.refreshEtat(this.player.get("buff"), "buff");
+            this.refreshInfo(this.player.get("mana").current, "mana", this.player.get("unlockMana"));
+
+            var arme = this.player.arme();
+            var bonusArme = arme.degats[0] + "-" + arme.degats[1];
+            this.refreshInfo(bonusArme, "arme");
+
+            var lifeSteal;
+            if (arme.lifeSteal) {
+                var baseAttaque = this.player.get("attaque");
+                var lifeStealMin = Math.round(Utils.percent(baseAttaque + arme.degats[0], arme.lifeSteal[0]));
+                var lifeStealMax = Math.round(Utils.percent(baseAttaque + arme.degats[1], arme.lifeSteal[1]));
+                lifeSteal = lifeStealMin + "-" + lifeStealMax;
+            }
+            this.refreshInfo(lifeSteal, "lifeSteal");
+
+            var manaSteal;
+            if (arme.manaSteal) manaSteal = arme.manaSteal[0] + "-" + arme.manaSteal[1] + "%";
+            this.refreshInfo(manaSteal, "manaSteal");
+
+            var bouclier = this.player.bouclier();
+            var bonusBouclier = bouclier.defense[0] + "-" + bouclier.defense[1];
+            this.refreshInfo(bonusBouclier, "bouclier");
+        };
+
+        this.refreshInfo = function(info, key, conditionToShow) {
+            if (conditionToShow == undefined) {
+                conditionToShow = (info != undefined);
+            }
+
+            var infoDom = this.el.find("profil info."+key);
+            if (conditionToShow) {
+                infoDom.show();
+                infoDom.find("span").html(info);
+            }else infoDom.hide();
+        };
+
+        this.refreshEtat = function(etat, key) {
+            var etatDom = this.el.find("profil info."+key);
+            if (etat) {
+                etatDom.show();
+
+                var amount;
+                if (etat.offensif) amount = etat.degats[0] + "-" + etat.degats[1];
+                else {
+                    var lifeMax = this.player.get("life").max;
+                    var vieMin = Math.round(Utils.percent(lifeMax, etat.vie[0]));
+                    var vieMax = Math.round(Utils.percent(lifeMax, etat.vie[1]));
+                    amount = vieMin + "-" + vieMax;
+                }
+                etatDom.find("span.amount").html(amount);
+                etatDom.find("span.duree").html(etat.current);
+            }else etatDom.hide();
+        };
+
+        this.loop = function() {
+            if (!this.inventaireOpen) return;
+            if (!$("carnet").hasClass("hide")) $("carnet").addClass("hide");
+        };
+
+        this.refreshConso = function(consoDom) {
+            var name = this.Textes.get(consoDom.attr("id"));
+            var nb = parseInt(consoDom.attr("nb"));
+
+            if (nb == 1) consoDom.html(name);
+            else consoDom.html(name + "(x"+nb+")");
+        }
+        this.refreshMagie = function(magieDom) {
+            var id = magieDom.attr("id");
+            var magie = Items.get("magie", id);
+            var currentMana = this.player.get("mana.current");
+
+            magieDom.removeClass("clickable");
+            magieDom.removeClass("interdit");
+            if (!magie.offensif) {
+                if (magie.manaCost <= currentMana) magieDom.addClass("clickable");
+                else magieDom.addClass("interdit");
+            }
+        }
+
+        this.makeEvents = function() {
+            var that = this;
+
+            this.el.find("armes element").click(function() {
+                var coche = $(this).find("case");
+                if (!coche.hasClass("coche")) {
+                    that.el.find("armes case").removeClass("coche");
+                    coche.addClass("coche");
+                    that.player.selectArme($(this).attr("id"));
+                    that.refreshStats();
+                }
+            });
+            this.el.find("boucliers element").click(function() {
+                var coche = $(this).find("case");
+                if (!coche.hasClass("coche")) {
+                    that.el.find("boucliers case").removeClass("coche");
+                    coche.addClass("coche");
+                    that.player.selectBouclier($(this).attr("id"));
+                    that.refreshStats();
+                }
+            });
+
+            this.el.find("magies element").hover(function() {
+                that.refreshMagie($(this));
+            }, function() {
+                $(this).removeClass("clickable");
+                $(this).removeClass("interdit");
+            });
+
+            this.el.find("consos element").hover(function() {
+                var id = $(this).attr("id");
+                var item = Items.get("conso", id);
+
+                var html = $(this).html();
+                $(this).removeClass("clickable");
+                if (!item.offensif) {
+                    $(this).addClass("clickable");
+                }
+            }, function() {
+                $(this).removeClass("clickable");
+            });
+
+            this.el.find("magies element").click(function() {
+                var id = $(this).attr("id");
+                var magie = Items.get("magie", id);
+                if (!magie.offensif) {
+                    that.player.spell(id);
+                    that.player.etatsManager.infligeEtats();
+                    that.refreshStats();
+                    that.refreshMagie($(this));
+                }
+            });
+            this.el.find("consos element").click(function() {
+                var id = $(this).attr("id");
+                var item = Items.get("conso", id);
+
+                if (!item.offensif) {
+                    that.player.use(id, null)
+                    var nb = that.consos.get(id)-1;
+                    if (nb <= 0) {
+                        that.consos.remove(id);
+                        $(this).remove();
+                    }else {
+                        that.consos.put(id, nb);
+                        $(this).attr("nb", nb);
+                        that.refreshConso($(this));
+                    }
+
+                    that.player.etatsManager.infligeEtats();
+                    that.refreshStats();
+                }
+            });
+
+            this.el.find(".canClose").click(function(e) {
+                var target = $(e.target);
+                if (target.hasClass("canClose")) {
+                    that.inventaireOpen = false;
+                    $("carnet").removeClass("hide");
+                    that.el.fadeOut();
+                }
+            });
+        };
+
+        this.init(parent);
+    };
+});

@@ -1,1 +1,47 @@
-define(["jquery","app/utils/utils","app/utils/viewUtils"],function(a,f,e){return function(d){this.init=function(b){this.parent=b;this.Textes=b.Textes;this.mediatheque=b.mediatheque;var c=this;a(window).on("debouncedresize resize",function(){c.resize()});a(document).ready(function(){c.resize()})};this.resize=function(){var b=a("body").width(),c=a("body").height(),d=1024/768;b>=c?a(".scene").css({width:c*d+"px",height:"100%"}):a(".scene").css({width:"100%",height:0.75*b+"px"});e.verticalCenter()};this.init(d)}});
+'use strict';
+define(["jquery",
+        "app/utils/utils",
+        "app/utils/viewUtils"], function($, Utils, ViewUtils){
+    return function(parent){
+        this.init = function(parent) {
+            this.parent = parent;
+            this.Textes = parent.Textes;
+            this.mediatheque = parent.mediatheque;
+
+            var that = this;
+            $(window).on('debouncedresize resize', function() {
+            	that.resize();
+  			});
+            $(document).ready(function() {
+            	that.resize();
+            });
+        };
+
+        /**
+         * Redimensionne la fenetre en fonction du ratio de l'ecran
+         */
+        this.resize = function() {
+            var w = $("body").width();
+            var h = $("body").height();
+            var rapport = {
+                    w : 1024 / 768,
+                    h : 768 / 1024
+            };
+
+            if (w >= h) {
+                $(".scene").css({
+                    width : h * rapport.w + "px",
+                    height : "100%"
+                });
+            }else {
+                $(".scene").css({
+                    width : "100%",
+                    height : w * rapport.h + "px"
+                });
+            }
+            ViewUtils.verticalCenter();
+        };
+
+        this.init(parent);
+    };
+});

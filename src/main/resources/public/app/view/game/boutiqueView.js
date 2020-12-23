@@ -1,7 +1,207 @@
-define("jquery underscore app/utils/utils app/utils/viewUtils app/utils/map text!app/template/game/boutique.html app/data/items".split(" "),function(e,f,n,h,k,l,g){return function(m){this.init=function(a){this.el=e(".boutique");this.parent=a;this.Textes=a.Textes;this.mediatheque=a.mediatheque;this.kongregateUtils=a.kongregateUtils;this.saveManager=a.saveManager;this.recompenseManager=a.recompenseManager;this.player=a.playerManager;this.itemsAvailable=[];this.items=new k;this.purchase=[];this.boutiqueOpen=
-!1;this.el.hide()};this.open=function(a,b,c){this.boutiqueOpen=!0;e(".histoire").fadeOut();e(".fight").fadeOut();e(".jeuGarde").fadeOut();e(".quetes").fadeOut();this.onPurchase=b;this.onNoPurchase=c;this.itemsAvailable=a;this.purchase=[];this.acheter()};this.acheter=function(){this.items.clear();for(var a in this.itemsAvailable){var b=this.itemsAvailable[a];this.items.put(b,g.get(b))}this.render("achat");this.el.fadeIn()};this.vendre=function(){this.items.clear();this.addItemsVente(this.player.get("equipment.arme"));
-this.addItemsVente(this.player.get("equipment.bouclier"));this.addItemsVente(this.player.get("equipment.magie"));this.addItemsVente(this.player.get("equipment.conso"));this.render("vente");this.refresh();this.el.fadeIn()};this.addItemsVente=function(a){for(var b in a){var c=a[b],d=this.items.get(c);d?(d.nb++,this.items.put(c,d)):(d=g.get(c),d.price&&(d.price=Math.round(0.5*d.price),d.nb=1,this.items.put(c,d)))}};this.render=function(a){this.mode=a;var b=this;f.templateSettings.variable="data";a=f.template(l);
-this.el.html(a({text:this.Textes,mode:this.mode,items:this.items}));h.verticalCenter();setTimeout(function(){b.showActions()},50);this.makeEvents()};this.loop=function(){this.boutiqueOpen&&(e("carnet").hasClass("hide")||e("carnet").addClass("hide"))};this.refresh=function(){this.boutiqueOpen&&(this.mode="vente",0==this.el.find(".itemsContainer actions").children().length?(this.el.find(".itemsContainer").hide(),this.el.find("storyContainer").show()):(this.el.find(".itemsContainer").show(),this.el.find("storyContainer").hide()))};
-this.sellAndRefresh=function(a){var b=this.items.get(a);b.nb--;var c=this.el.find(".itemsContainer #"+a);0>=b.nb?(this.items.remove(a),c.remove()):(this.items.put(a,b),c.find("quantity amount").html("x"+b.nb),1==b.nb&&c.find("quantity amount").hide());this.refresh()};this.makeEvents=function(){var a=this;this.el.find("#acheter").click(function(){a.hideActions(function(){a.acheter()})});this.el.find("#vendre").click(function(){a.hideActions(function(){a.vendre()})});this.el.find("#quitter").click(function(){a.hideActions(function(){a.close()})});
-this.el.find(".itemsContainer action").click(function(){var b=e(this).attr("id"),c=!1;"achat"==a.mode?c=a.player.achete(b):a.player.vend(b)&&(c=!0,a.sellAndRefresh(b));c&&a.purchase.push(b)})};this.showActions=function(a){var b=this;this.el.find("action").css({top:"0%"});setTimeout(function(){b.el.find(".itemsContainer").css("overflow","auto");a&&a()},300)};this.hideActions=function(a){this.el.find(".itemsContainer").removeAttr("style");this.el.find("action").css({top:"150%"});setTimeout(a,300)};
-this.close=function(){this.boutiqueOpen=!1;if(this.onNoPurchase&&0==this.purchase.length)this.onNoPurchase();else this.onPurchase()};this.init(m)}});
+'use strict';
+define(["jquery", "underscore",
+        "app/utils/utils",
+        "app/utils/viewUtils",
+        "app/utils/map",
+        "text!app/template/game/boutique.html",
+        "app/data/items"
+        ], function($, _, Utils, ViewUtils, HashMap, page, Items){
+    return function(parent){
+        this.init = function(parent) {
+        	this.el = $(".boutique");
+
+            this.parent = parent;
+            this.Textes = parent.Textes;
+            this.mediatheque = parent.mediatheque;
+
+            // Manager
+            this.kongregateUtils = parent.kongregateUtils;
+            this.saveManager = parent.saveManager;
+            this.recompenseManager = parent.recompenseManager;
+            this.player = parent.playerManager;
+
+            this.itemsAvailable = [];
+            this.items = new HashMap();
+            this.purchase = [];
+
+            this.boutiqueOpen = false;
+            this.el.hide();
+        };
+
+        /**
+        * Ouvre la boutique
+        **/
+        this.open = function(items, onPurchase, onNoPurchase) {
+            this.boutiqueOpen = true;
+            $(".histoire").fadeOut();
+            $(".fight").fadeOut();
+            $(".jeuGarde").fadeOut();
+            $(".quetes").fadeOut();
+
+            this.onPurchase = onPurchase;
+            this.onNoPurchase = onNoPurchase;
+            this.itemsAvailable = items;
+            this.purchase = [];
+
+            this.acheter();
+        };
+
+        this.acheter = function() {
+            this.items.clear();
+            for (var i in this.itemsAvailable) {
+                var item = this.itemsAvailable[i];
+                this.items.put(item, Items.get(item));
+            }
+
+            this.render("achat");
+            this.el.fadeIn();
+        };
+        this.vendre = function() {
+            this.items.clear();
+
+            this.addItemsVente(this.player.get("equipment.arme"));
+            this.addItemsVente(this.player.get("equipment.bouclier"));
+            this.addItemsVente(this.player.get("equipment.magie"));
+            this.addItemsVente(this.player.get("equipment.conso"));
+
+            this.render("vente");
+            this.refresh();
+
+            this.el.fadeIn();
+        };
+
+        this.addItemsVente = function(itemsAvailable) {
+            for (var i in itemsAvailable) {
+                var itemName = itemsAvailable[i];
+                var item = this.items.get(itemName);
+                if (item) {
+                    item.nb++;
+                    this.items.put(itemName, item);
+                }else {
+                    var item = Items.get(itemName);
+                    if (item.price) {
+                        item.price = Math.round(item.price * 0.5);
+                        item.nb = 1;
+                        this.items.put(itemName, item);
+                    }
+                }
+            }
+        };
+
+        this.render = function(mode) {
+            this.mode = mode;
+            var that = this;
+            _.templateSettings.variable = "data";
+            var template = _.template(page);
+            var templateData = {
+                    text : this.Textes,
+                    mode : this.mode,
+                    items : this.items
+            };
+            this.el.html(template(templateData));
+
+//            this.renderConsos();
+
+            ViewUtils.verticalCenter();
+
+            setTimeout(function() {
+                that.showActions();
+            }, 50);
+            this.makeEvents();
+        };
+
+        this.loop = function() {
+            if (!this.boutiqueOpen) return;
+            if (!$("carnet").hasClass("hide")) $("carnet").addClass("hide");
+        };
+        this.refresh = function() {
+            if (!this.boutiqueOpen) return;
+
+            if (this.mode = "vente") {
+                if (this.el.find(".itemsContainer actions").children().length == 0) {
+                    this.el.find(".itemsContainer").hide();
+                    this.el.find("storyContainer").show();
+                }else {
+                    this.el.find(".itemsContainer").show();
+                    this.el.find("storyContainer").hide();
+                }
+            }
+        };
+
+        /**
+        * Vend et raffraichit l'etat de la boutique
+        **/
+        this.sellAndRefresh = function(itemToRemove) {
+            var item = this.items.get(itemToRemove);
+            item.nb--;
+
+            var itemDom = this.el.find(".itemsContainer #"+itemToRemove);
+            if (item.nb <= 0) {
+                this.items.remove(itemToRemove);
+                itemDom.remove();
+            }else {
+                this.items.put(itemToRemove, item);
+                itemDom.find("quantity amount").html("x" + item.nb);
+                if (item.nb == 1) itemDom.find("quantity amount").hide();
+            }
+
+            this.refresh();
+        };
+
+        this.makeEvents = function() {
+            var that = this;
+            this.el.find("#acheter").click(function() {
+                that.hideActions(function() {
+                    that.acheter();
+                });
+            });
+            this.el.find("#vendre").click(function() {
+                that.hideActions(function() {
+                    that.vendre();
+                });
+            });
+            this.el.find("#quitter").click(function() {
+                that.hideActions(function() {
+                    that.close();
+                });
+            });
+            this.el.find(".itemsContainer action").click(function() {
+                var itemId = $(this).attr("id");
+                var operate = false;
+                if (that.mode == "achat") operate = that.player.achete(itemId);
+                else if (that.player.vend(itemId)) {
+                    operate = true;
+                    that.sellAndRefresh(itemId);
+                }
+                if (operate) that.purchase.push(itemId);
+            });
+        };
+
+        this.showActions = function(then) {
+            var that = this;
+            this.el.find("action").css({
+                "top" : "0%"
+            });
+            setTimeout(function() {
+                that.el.find(".itemsContainer").css("overflow", "auto");
+                if (then) then();
+            }, 300);
+        };
+        this.hideActions = function(then) {
+            this.el.find(".itemsContainer").removeAttr("style");
+            this.el.find("action").css({
+                "top" : "150%"
+            });
+            setTimeout(then, 300);
+        };
+
+        this.close = function() {
+            this.boutiqueOpen = false;
+            if (this.onNoPurchase && this.purchase.length == 0) {
+                this.onNoPurchase();
+            } else this.onPurchase();
+        };
+
+        this.init(parent);
+    };
+});

@@ -1,6 +1,158 @@
-define(["jquery","sha"],function(f,h){return{name:"bebelSamhainV2",MAX_GOLD:9999,load:function(a,b,c,d,e,g){d||(d="POST");e||(e=!1);g||(g=function(b,c,d){console.log("Erreur lors de l'appel à : ",a);console.log("Erreur sur : ",b,"avec le status",c,"erreur retournée :",d)});console.log("Appel de l'url",a,"avec les parametres",b,"en mode",d,"en async",e);f.ajax({type:d,url:a,async:e,data:JSON.stringify(b),contentType:"application/json; charset\x3dutf-8",dataType:"json",success:c,error:g})},rand:function(a,
-b,c){c&&b++;a=Math.ceil(a);b=Math.floor(b);return Math.floor(Math.random()*(b-a))+a},then:function(a,b){b||(b=1E3);setTimeout(function(){a()},b)},encode:function(a){return btoa(a)},decode:function(a){return atob(a)},decodeHtml:function(a){var b=f("\x3ctextarea\x3e");b.html(a);a=b.text();a=a.replace(/<\/(text)>$/g,"");a=a.replace(/<\/(text)>/g," ");a=a.replace(/<\/(br)>/g," ");return a=a.replace(/<\/?[^>]+(>|$)/g,"")},replaceAll:function(a,b,c){for(;-1<a.indexOf(b);)a=a.replace(b,c);return a},hash:function(a){return h.sha256("JHGKJHGjhkgkhjgxcvkjgKHJGJH4455456s4dfsdfkhgHJKGJHGdckldsjvkljklLHKH54654"+
-a+"sdfqsHJGKJGHG5465564HJGHJFJHGJHG23465dfgdfg34654GHFHGF")},percent:function(a,b,c){c||(c=100);return a*b/c},toPercent:function(a,b){return 100*a/b},clone:function(a){return void 0==a?a:f.extend(!0,{},a)},normalize:function(a){a=a.toLowerCase();a=a.replace(/[áàâäåãæ]/g,"a");a=a.replace(/[çĉ]/g,"c");a=a.replace(/[éèêë]/g,"e");a=a.replace(/[ĝ]/g,"g");a=a.replace(/[ĥ]/g,"h");a=a.replace(/[íìîï]/g,"i");a=a.replace(/[ĵ]/g,"j");a=a.replace(/[ñ]/g,"n");a=a.replace(/[óòôöøœ]/g,"o");a=a.replace(/[ŝšß]/g,
-"s");a=a.replace(/[ŭùûü]/g,"u");a=a.replace(/[ýÿ]/g,"y");a=a.replace(/[ž]/g,"z");return a=a.replace(/[\u0300-\u036f]/g,"")},pow:function(a,b,c){return Math.round(a*Math.pow(b,c))},contains:function(a,b){return-1<a.indexOf(b)},count:function(a,b){var c=0,d;for(d in a)a[d]==b&&c++;return c},fullscreen:function(){try{var a=document.fullscreenElement&&null!==document.fullscreenElement||document.webkitFullscreenElement&&null!==document.webkitFullscreenElement||document.mozFullScreenElement&&null!==document.mozFullScreenElement||
-document.msFullscreenElement&&null!==document.msFullscreenElement,b=document.documentElement;a?document.exitFullscreen?document.exitFullscreen():document.webkitExitFullscreen?document.webkitExitFullscreen():document.mozCancelFullScreen?document.mozCancelFullScreen():document.msExitFullscreen&&document.msExitFullscreen():b.requestFullscreen?b.requestFullscreen():b.mozRequestFullScreen?b.mozRequestFullScreen():b.webkitRequestFullScreen?b.webkitRequestFullScreen():b.msRequestFullscreen&&b.msRequestFullscreen();
-return a}catch(c){console.log("Erreur lors du toggle fullscreen")}}}});
+'use strict';
+define(["jquery", "sha"], function($, sha){
+	return {
+		name : "bebelSamhainV2",
+		MAX_GOLD : 9999,
+		
+		/**
+		* Permet d'appeler un WS
+		**/
+		load : function(url, params, successC, type, asyncMode, errorFunc) {
+			if (!type) type = "POST";
+			if (!asyncMode) asyncMode = false;
+			if (!errorFunc) {
+			    errorFunc = function (request, status, errorThrown) {
+                    console.log("Erreur lors de l'appel à : ", url);
+                    console.log("Erreur sur : ", request, "avec le status", status, "erreur retournée :", errorThrown);
+                };
+			}
+
+			console.log("Appel de l'url", url, "avec les parametres", params, "en mode", type, "en async", asyncMode);
+
+			$.ajax({
+	            type: type,
+	            url: url,
+	            async : asyncMode,
+	            data: JSON.stringify(params),
+	            contentType: "application/json; charset=utf-8",
+	            dataType: "json",
+	            success: successC,
+	            error: errorFunc
+	        });
+		},
+
+		// Max non inclus
+		rand : function(pMin, pMax, maxInclude) {
+		  if (maxInclude) pMax++;
+		  var min = Math.ceil(pMin);
+		  var max = Math.floor(pMax);
+		  return Math.floor(Math.random() * (max - min)) + min;
+		},
+
+		then : function(callback, timeout) {
+		    if (!timeout) timeout = 1000;
+		    setTimeout(function() {
+		        callback();
+		    }, timeout);
+		},
+
+		encode : function(data) {
+			return btoa(data);
+		},
+		
+		decode : function(str) {
+			return atob(str);
+		},
+		decodeHtml : function(str) {
+			var fake = $("<textarea>");
+			fake.html(str);
+			var txt = fake.text();
+
+			txt = txt.replace(/<\/(text)>$/g, "");
+			txt = txt.replace(/<\/(text)>/g, " ");
+			txt = txt.replace(/<\/(br)>/g, " ");
+			txt = txt.replace(/<\/?[^>]+(>|$)/g, "");
+			return txt;
+		},
+
+		replaceAll : function(str, str1, str2) {
+		    var result = str;
+		    while (result.indexOf(str1) > -1) {
+		        result = result.replace(str1, str2);
+		    }
+		    return result;
+		},
+		hash : function(str) {
+			str = "JHGKJHGjhkgkhjgxcvkjgKHJGJH4455456s4dfsdfkhgHJKGJHGdckldsjvkljklLHKH54654" + str + "sdfqsHJGKJGHG5465564HJGHJFJHGJHG23465dfgdfg34654GHFHGF";
+			return sha.sha256(str);
+		},
+		percent : function(value, percentage, base) {
+			if (!base) base = 100;
+			return (value * percentage)/base;
+		},
+        toPercent : function(value, base) {
+        	return (value * 100)/base;
+        },
+		clone : function(value) {
+		    if (value == undefined) return value;
+			return $.extend(true, {}, value);
+		},
+		normalize : function(texte) {
+		    var newText = texte.toLowerCase();
+		    newText = newText.replace(/[áàâäåãæ]/g, "a");
+		    newText = newText.replace(/[çĉ]/g, "c");
+		    newText = newText.replace(/[éèêë]/g, "e");
+		    newText = newText.replace(/[ĝ]/g, "g");
+		    newText = newText.replace(/[ĥ]/g, "h");
+		    newText = newText.replace(/[íìîï]/g, "i");
+		    newText = newText.replace(/[ĵ]/g, "j");
+		    newText = newText.replace(/[ñ]/g, "n");
+		    newText = newText.replace(/[óòôöøœ]/g, "o");
+		    newText = newText.replace(/[ŝšß]/g, "s");
+		    newText = newText.replace(/[ŭùûü]/g, "u");
+		    newText = newText.replace(/[ýÿ]/g, "y");
+		    newText = newText.replace(/[ž]/g, "z");
+
+		    newText = newText.replace(/[\u0300-\u036f]/g, "");
+		    return newText;
+		},
+		pow : function(multiple, base, puissance) {
+        	return Math.round(multiple * Math.pow(base, puissance));
+        },
+        contains : function(tab, key) {
+            return tab.indexOf(key) > -1;
+        },
+        count : function(tab, key) {
+            var nb = 0;
+            for (var i in tab) {
+                if (tab[i] == key) nb++;
+            }
+            return nb;
+        },
+        fullscreen : function() {
+            try {
+	        	var isInFullScreen = (document.fullscreenElement && document.fullscreenElement !== null) ||
+	                (document.webkitFullscreenElement && document.webkitFullscreenElement !== null) ||
+	                (document.mozFullScreenElement && document.mozFullScreenElement !== null) ||
+	                (document.msFullscreenElement && document.msFullscreenElement !== null);
+	
+	            var docElm = document.documentElement;
+	            if (!isInFullScreen) {
+	                if (docElm.requestFullscreen) {
+	                    docElm.requestFullscreen();
+	                } else if (docElm.mozRequestFullScreen) {
+	                    docElm.mozRequestFullScreen();
+	                } else if (docElm.webkitRequestFullScreen) {
+	                    docElm.webkitRequestFullScreen();
+	                } else if (docElm.msRequestFullscreen) {
+	                    docElm.msRequestFullscreen();
+	                }
+	            } else {
+	                if (document.exitFullscreen) {
+	                    document.exitFullscreen();
+	                } else if (document.webkitExitFullscreen) {
+	                    document.webkitExitFullscreen();
+	                } else if (document.mozCancelFullScreen) {
+	                    document.mozCancelFullScreen();
+	                } else if (document.msExitFullscreen) {
+	                    document.msExitFullscreen();
+	                }
+	            }
+	            
+	            return isInFullScreen;
+            }catch(e) {
+            	console.log("Erreur lors du toggle fullscreen");
+            }
+        }
+	};
+});

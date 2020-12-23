@@ -1,23 +1,694 @@
-define("jquery underscore app/utils/utils app/manager/levelManager app/manager/etatsManager app/data/items app/data/etats app/data/quetes".split(" "),function(k,s,e,n,p,h,t,q){return function(r){this.init=function(a){this.el="";this.parent=a;this.Textes=a.Textes;this.saveManager=a.saveManager;this.recompenseManager=a.recompenseManager;this.data=this.saveManager.load("player");this.restoreStates();this.options=this.saveManager.options();this.mediatheque=a.mediatheque;this.levelManager=new n(this);
-this.etatsManager=new p(this);this.amountBuffer=[]};this.get=function(a){a=a.split(".");var b=this.data,c;for(c in a)if(b=b[a[c]],void 0==b)return null;return b};this.set=function(a,b){for(var c=a.split("."),d=this.data,e,g=0;g<c.length;g++)if(g==c.length-1?e=c[g]:d=d[c[g]],void 0==d)return null;d[e]=b};this.add=function(a,b){var c=this.get(a);this.set(a,c+b)};this.finalizeQuest=function(a){var b=q.get(this.get("currentQuest.name"));b?(void 0==a&&(a=this.get("currentQuest.step"),a=e.toPercent(a,b.steps)),
-a=e.percent(b.price,a),this.addGold(a),this.data.quetesComplete.push(b.name),this.set("currentQuest.name",null),this.set("currentQuest.step",0)):console.log("Erreur, la quete "+this.get("currentQuest.name")+" n'existe pas")};this.bouclier=function(){var a=this.data.equipment.bouclier,b=this.data.equipment.currentBouclier;e.contains(a,b)||(console.log("Erreur bouclier - bouclier non possédé",b,a),this.data.equipment.currentBouclier="bras");return h.get("bouclier",b)};this.arme=function(){var a=this.data.equipment.arme,
-b=this.data.equipment.currentArme;e.contains(a,b)||(console.log("Erreur arme - arme non possédée",b,a),this.data.equipment.currentArme="poing");return h.get("arme",b)};this.currentArme=function(){this.arme();return this.data.equipment.currentArme};this.currentBouclier=function(){this.bouclier();return this.data.equipment.currentBouclier};this.addEquipment=function(a,b){var c,d;b?(c=a,d=b):(d=a,c=h.get(d),c=c.type?c.type:"ifObj");"ifObj"!=c&&this.addAmountChange("+"+this.Textes.get(d),"equipment");
-this.data.equipment[c].push(d);this.options.selectAuto&&("arme"==c?this.selectBetterArme(d):"bouclier"==c&&this.selectBetterBouclier(d))};this.removeEquipment=function(a,b){var c,d;b?(c=a,d=b):(d=a,c=h.get(d),c=c.type?c.type:"ifObj");if("poing"!=d&&"bras"!=d){var e=this.data.equipment[c].indexOf(d);-1<e?("ifObj"!=c&&this.addAmountChange("\x3cs\x3e"+this.Textes.get(d)+"\x3c/s\x3e","equipment"),this.data.equipment[c].splice(e,1),this.arme(),this.bouclier()):console.log("Erreur suppression - item non possédé",
-c,d)}};this.selectArme=function(a){e.contains(this.data.equipment.arme,a)?this.data.equipment.currentArme=a:console.log("Erreur selection - arme non possédée",a)};this.selectBetterArme=function(a){var b=h.get("arme",a);if(b){var c=this.arme(),d=(b.degats[0]+b.degats[1])/2;b.lifeSteal&&(d+=(b.lifeSteal[0]+b.lifeSteal[1])/2);b=(c.degats[0]+c.degats[1])/2;c.lifeSteal&&(b+=(c.lifeSteal[0]+c.lifeSteal[1])/2);d>b&&this.selectArme(a)}else console.log("Erreur - Impossible de trouver l'arme",a)};this.selectBouclier=
-function(a){e.contains(this.data.equipment.bouclier,a)?this.data.equipment.currentBouclier=a:console.log("Erreur selection - bouclier non possédé",a)};this.selectBetterBouclier=function(a){var b=h.get("bouclier",a);if(b){var c=this.bouclier();(b.defense[0]+b.defense[1])/2>(c.defense[0]+c.defense[1])/2&&this.selectBouclier(a)}};this.has=function(a){return e.contains(this.data.equipment.arme,a)?"arme":e.contains(this.data.equipment.bouclier,a)?"bouclier":e.contains(this.data.equipment.magie,a)?"magie":
-e.contains(this.data.equipment.conso,a)?"conso":e.contains(this.data.equipment.clef,a)?"clef":e.contains(this.data.equipment.ifObj,a)?"ifObj":null};this.usableMagie=function(){if(!this.get("unlockMana"))return[];var a=[],b=this.data.mana.current,c;for(c in this.data.equipment.magie){var d=this.data.equipment.magie[c],e=h.get("magie",d);b>=e.manaCost&&a.push(d)}return a};this.getRandSoin=function(){var a=[],b;for(b in this.data.equipment.conso){var c=this.data.equipment.conso[b],d=h.get("conso",c);
-d&&0<d.vie[1]?a.push(c):d||console.log("Erreur - le conso n'existe pas",c)}b=e.rand(0,a.length);return a[b]};this.hasAll=function(a){Array.isArray(a)||(a=[a]);var b=!0,c;for(c in a)var d=a[c],b=b&&this.has(d);return b};this.countItem=function(a){var b;(b=0+e.count(this.data.equipment.arme,a))||(b+=e.count(this.data.equipment.bouclier,a));b||(b+=e.count(this.data.equipment.magie,a));b||(b+=e.count(this.data.equipment.conso,a));b||(b+=e.count(this.data.equipment.clef,a));b||(b+=e.count(this.data.equipment.ifObj,
-a));return b};this.hasNoOne=function(a){Array.isArray(a)||(a=[a]);for(var b in a)if(this.has(a[b]))return!1;return!0};this.use=function(a,b){b||(b=this);Array.isArray(b)||(b=[b]);if(e.contains(this.data.equipment.conso,a)){var c=h.get("conso",a),d;for(d in b){var f=b[d];if(c.degats){var g=this.data.attaque,g=e.rand(g+c.degats[0],g+c.degats[1],!0);0<g&&f.hurt(g,!0)}c.vie&&(g=e.rand(c.vie[0],c.vie[1],!0),0<g&&f.addPercentLife(g));c.mana&&(g=e.rand(c.mana[0],c.mana[1],!0),0<g&&f.addPercentMana(g));if(c.effet)for(d in c.effet)this.etatsManager.check(c.effet[d],
-f);c.action&&c.action(this,f,this.fightView);c.offensif&&f.showDegats(c.anim)}this.mediatheque.playSound(c.sound+".wav");this.removeEquipment("conso",a);return!0}console.log("Erreur use - objet non possédé",a,b);return!1};this.spell=function(a,b){if(!this.get("unlockMana"))return!1;b||(b=this);Array.isArray(b)||(b=[b]);if(e.contains(this.data.equipment.magie,a)){var c=h.get("magie",a);if(c.manaCost<=this.get("mana.current")){this.addMana(-c.manaCost);for(var d in b){var f=b[d];if(c.vie){var g=e.rand(c.vie[0],
-c.vie[1],!0);0<g&&f.addPercentLife(g)}g=0;c.degats&&(g=this.data.attaque,g=e.rand(c.degats[0]+g,c.degats[1]+g,!0),0<g&&f.hurt(g,!0,c.element));if(c.lifeSteal){var k=e.rand(c.lifeSteal[0],c.lifeSteal[1],!0);this.stealLife(k,g,f)}c.manaSteal&&(g=e.rand(c.manaSteal[0],c.manaSteal[1],!0),this.stealMana(g,f));c.action&&c.action(this,f,this.fightView);if(c.effet)for(d in c.effet)this.etatsManager.check(c.effet[d],f);c.offensif&&f.showDegats(c.anim)}this.mediatheque.playSound(c.sound+".wav")}else console.log("Erreur spell - pas assez de mana",
-c,b)}else console.log("Erreur spell - sort non possédé",a,b)};this.attaque=function(a,b){Array.isArray(a)||(a=[a]);void 0==b&&(b=!0);var c=this.data.attaque,d=this.arme(),f=c+d.degats[0],c=c+d.degats[1],g=this.get("level"),h;for(h in a){var k=a[h],l=e.rand(f,c,!0);0>l&&(l=0);if(d.lifeSteal){var m=e.rand(d.lifeSteal[0],d.lifeSteal[1],!0);this.stealLife(m,l,k)}d.manaSteal&&(m=e.rand(d.manaSteal[0],d.manaSteal[1],!0),0<m&&this.steal("mana",k,m+g));k.hurt(l,b);k.showDegats(d.anim)}d.offensif=!0;this.mediatheque.playSound(d.sound+
-".wav")};this.hurtPercent=function(a,b,c){a=Math.round(e.percent(this.data.life.max,a));this.hurt(a,b,c)};this.hurt=function(a,b,c){if(b){b=this.data.defense;var d=this.bouclier();b=e.rand(b+d.defense[0],b+d.defense[1],!0);a-=b}0>a&&(a=0);this.addLife(-a,c);return a};this.addPercentLife=function(a,b){a=Math.round(e.percent(this.data.life.max,a));this.addLife(a,b)};this.addLife=function(a,b){this.addAmountChange(a,"life",b);this.data.life.current+=a;0>this.data.life.current&&(this.data.life.current=
-0);this.data.life.current>this.data.life.max&&(this.data.life.current=this.data.life.max)};this.addPercentMana=function(a){a=Math.round(e.percent(this.data.mana.max,a));this.addMana(a)};this.addMana=function(a){this.data.unlockMana&&(this.addAmountChange(a,"mana"),this.data.mana.current+=a,0>this.data.mana.current&&(this.data.mana.current=0),this.data.mana.current>this.data.mana.max&&(this.data.mana.current=this.data.mana.max))};this.unlockMana=function(a){this.data.unlockMana=!0;0>a&&(a=0);this.data.mana.max+=
-a;this.addMana(this.data.mana.max)};this.addXp=function(a){0<a&&this.addAmountChange(a,"xp");this.levelManager.add(a)};this.levelUp=function(){this.recompenseManager.addSuccess("LevelEarn",this.data.level);this.data.attaque++;this.data.life.max+=25;this.data.unlockMana&&this.data.mana.max++;this.addLife(this.data.life.max);this.addMana(this.data.mana.max)};this.addGold=function(a){0<a&&this.addAmountChange(a,"gold");this.data.gold+=a;0>this.data.gold&&(this.data.gold=0);this.data.gold>e.MAX_GOLD&&
-(this.data.gold=e.MAX_GOLD,this.recompenseManager.addSuccess("MaxGoldEarn"));this.recompenseManager.addSuccess("GoldEarn",this.data.gold)};this.achete=function(a){var b=h.get(a);if(b&&b.price){if(this.data.gold>=b.price)return this.addGold(-b.price),this.addEquipment(b.type,b.name),!0;console.log("Erreur achete - l'item est trop chere",a,b.price)}else console.log("Erreur achete - l'item n'existe pas ou n'a pas de prix",a);return!1};this.vend=function(a){if(this.data.gold>=e.MAX_GOLD)return!1;var b=
-h.get(a);if(b&&b.price)return this.addGold(Math.round(0.5*b.price)),this.removeEquipment(b.type,b.name),!0;console.log("Erreur vend - l'item n'existe pas ou n'a pas de prix",a);return!1};this.stealMana=function(a,b){var c=b.get("mana.current"),c=Math.round(e.percent(c,a));0<c&&this.steal("mana",b,c)};this.stealLife=function(a,b,c){var d=c.get("life.current"),f=0;b?(f=Math.round(e.percent(b,a)),0<f&&this.addLife(f)):(f=Math.round(e.percent(d,a)),0<f&&this.steal("life",c,f))};this.steal=function(a,
-b,c,d){switch(a){case "life":a=b.get("life.current");b.addLife(-c);a-=b.get("life.current");void 0!=d?this.addLife(e.rand(d,a,!0)):this.addLife(a);break;case "mana":a=b.get("mana.current");b.addMana(-c);a-=b.get("mana.current");void 0!=d?this.addMana(e.rand(d,a,!0)):this.addMana(a);break;case "gold":a=b.get("gold"),b.addGold(-c),a-=b.get("gold"),void 0!=d?this.addGold(e.rand(d,a,!0)):this.addGold(a)}};this.addAmountChange=function(a,b,c){c||(c="normal");this.amountBuffer.push({amount:a,type:b,element:c})};
-this.showNextAmount=function(){if(!(0>=this.amountBuffer.length)){var a=this.amountBuffer[0];this.showAmountChange(a.amount,a.type,a.element);this.amountBuffer.splice(0,1)}};this.showAmountChange=function(a,b,c){var d=0;switch(b){case "life":d=e.rand(10,30,!0);0>a?(this.showHurtScreen(c),a+="pv"):0==a?(c="miss",a=this.Textes.get("rate"),d=0):a="+"+a+"pv";break;case "mana":0<a&&(a="+"+a);a+="pm";d=e.rand(35,45,!0);break;case "xp":0<a&&(a="+"+a);a+="xp";d=e.rand(55,65,!0);break;case "gold":0<a&&(a=
-"+"+a),a+="po",d=e.rand(75,85,!0)}var f=k(".game hurts amountchanger:hidden:first");0<f.length?(f.removeAttr("style"),f.removeAttr("class"),f.removeAttr("element")):(f=k("\x3camountchanger\x3e\x3camount\x3e\x3c/amount\x3e\x3c/amountchanger\x3e"),k(".game hurts").append(f));f.find("amount").html(a);f.attr("class",b);f.attr("element",c);f.css({"margin-left":d+"%"});f.show();f.animate({top:"-50%",opacity:"0"},4E3,function(){f.hide()})};this.showDegats=function(){};this.showHurtScreen=function(a){var b=
-k(".game hurts").find("hurt."+a);0==b.length&&(b=k(".game hurts hurt.normal"));b.fadeIn(100,function(){b.fadeOut(200)})};this.restore=function(){this.data.life.current=0;this.addPercentLife(70);50>e.toPercent(this.data.mana.current,this.data.mana.max)&&(this.data.mana.current=0,this.addPercentMana(50));this.data.buff=null;this.data.debuff=null};this.saveState=function(a){this.data.savesData[a]=this.get(a)};this.restoreStates=function(){for(var a in this.data.savesData)void 0!=a&&this.set(a,this.data.savesData[a]);
-this.data.savesData={}};this.init(r)}});
+/*global define */
+define(["jquery",
+        'underscore',
+        "app/utils/utils",
+        "app/manager/levelManager",
+        "app/manager/etatsManager",
+        "app/data/items",
+        "app/data/etats",
+        "app/data/quetes",
+        ],
+function($, _, Utils, LevelManager, EtatsManager, Items, Etats, Quetes) {
+	'use strict';
+
+	return function(parent) {
+		this.init = function(parent) {
+			this.el = "";
+			this.parent = parent;
+			this.Textes = parent.Textes;
+
+			this.saveManager = parent.saveManager;
+			this.recompenseManager = parent.recompenseManager;
+			this.data = this.saveManager.load("player");
+			this.restoreStates();
+
+			this.options = this.saveManager.options();
+
+			this.mediatheque = parent.mediatheque;
+			this.levelManager = new LevelManager(this);
+			this.etatsManager = new EtatsManager(this);
+			this.amountBuffer = [];
+		};
+
+		this.get = function(key) {
+		    var keys = key.split(".");
+
+		    var data = this.data;
+		    for (var i in keys) {
+		        data = data[keys[i]];
+		        if (data == undefined) return null;
+		    }
+
+		    return data;
+		};
+		this.set = function(key, value) {
+		    var keys = key.split(".");
+
+            var data = this.data;
+            var lastKey;
+            for (var i=0; i<keys.length; i++) {
+                if (i == keys.length-1) lastKey = keys[i];
+                else data = data[keys[i]];
+
+                if (data == undefined) return null;
+            }
+
+            data[lastKey] = value;
+		};
+
+		this.add = function(key, amount) {
+		    var val = this.get(key);
+		    this.set(key, val + amount);
+		}
+
+		this.finalizeQuest = function(percent) {
+		    var quest = Quetes.get(this.get("currentQuest.name"));
+		    if (quest) {
+                if (percent == undefined) {
+                    var currentStep = this.get("currentQuest.step");
+                    percent = Utils.toPercent(currentStep, quest.steps);
+                }
+
+                var recompense = Utils.percent(quest.price, percent);
+                this.addGold(recompense);
+                this.data.quetesComplete.push(quest.name);
+                this.set("currentQuest.name", null);
+                this.set("currentQuest.step", 0);
+            }else console.log("Erreur, la quete "+ this.get("currentQuest.name") +" n'existe pas");
+		};
+
+		/**
+		* Gestion de l'equipement
+		**/
+		this.bouclier = function() {
+		    var boucliers = this.data.equipment.bouclier;
+		    var currentBouclier = this.data.equipment.currentBouclier;
+
+		    if (!Utils.contains(boucliers, currentBouclier)) {
+		        console.log("Erreur bouclier - bouclier non possédé", currentBouclier, boucliers);
+		        this.data.equipment.currentBouclier = "bras";
+            }
+
+		    return Items.get("bouclier", currentBouclier);
+		};
+		this.arme = function() {
+		    var armes = this.data.equipment.arme;
+            var currentArme = this.data.equipment.currentArme;
+
+            if (!Utils.contains(armes, currentArme)) {
+                console.log("Erreur arme - arme non possédée", currentArme, armes);
+                this.data.equipment.currentArme = "poing";
+            }
+
+            return Items.get("arme", currentArme);
+		};
+		this.currentArme = function() {
+		    this.arme();
+		    return this.data.equipment.currentArme;
+		};
+		this.currentBouclier = function() {
+		    this.bouclier();
+		    return this.data.equipment.currentBouclier;
+		};
+		this.addEquipment = function(param1, param2) {
+		    var type, name;
+		    if (param2) {
+		        type = param1;
+		        name = param2;
+		    } else {
+		        name = param1;
+		        var item = Items.get(name);
+		        if (item.type) type = item.type;
+		        else type = "ifObj";
+		    }
+
+            if (type != "ifObj") this.addAmountChange("+"+this.Textes.get(name), "equipment");
+		    this.data.equipment[type].push(name);
+
+		    // Si c'est une arme ou un bouclier et qu'il est meilleur, on le selectionne automatiquement
+		    if (this.options.selectAuto) {
+                if (type == "arme") this.selectBetterArme(name);
+                else if (type == "bouclier") this.selectBetterBouclier(name);
+            }
+		};
+		this.removeEquipment = function(param1, param2) {
+		    var type, name;
+		    if (param2) {
+		        type = param1;
+		        name = param2;
+		    }else {
+		        name = param1;
+                var item = Items.get(name);
+                if (item.type) type = item.type;
+                else type = "ifObj";
+		    }
+
+            // On ne supprime pas le poing ou le bras
+		    if (name == "poing" || name == "bras") return;
+
+		    var itemIndex = this.data.equipment[type].indexOf(name);
+		    if (itemIndex > -1) {
+		        if (type != "ifObj") this.addAmountChange("<s>"+this.Textes.get(name)+"</s>", "equipment");
+		        this.data.equipment[type].splice(itemIndex, 1);
+		        this.arme();
+		        this.bouclier();
+		    } else console.log("Erreur suppression - item non possédé", type, name);
+		};
+		this.selectArme = function(name) {
+		    var armes = this.data.equipment.arme;
+		    if (Utils.contains(armes, name)) {
+		        this.data.equipment.currentArme = name;
+		    } else console.log("Erreur selection - arme non possédée", name);
+		};
+		this.selectBetterArme = function(name) {
+            var arme = Items.get("arme", name);
+            if (!arme) {
+                console.log("Erreur - Impossible de trouver l'arme", name);
+                return;
+            }
+            var currentArme = this.arme();
+
+            var moyenneArme = (arme.degats[0] + arme.degats[1]) / 2;
+            if (arme.lifeSteal) moyenneArme += (arme.lifeSteal[0] + arme.lifeSteal[1]) / 2;
+            var moyenneCurrent = (currentArme.degats[0] + currentArme.degats[1]) / 2;
+            if (currentArme.lifeSteal) moyenneCurrent += (currentArme.lifeSteal[0] + currentArme.lifeSteal[1]) / 2;
+
+            if (moyenneArme > moyenneCurrent) this.selectArme(name);
+        };
+		this.selectBouclier = function(name) {
+		    var boucliers = this.data.equipment.bouclier;
+            if (Utils.contains(boucliers, name)) {
+                this.data.equipment.currentBouclier = name;
+            } else console.log("Erreur selection - bouclier non possédé", name);
+		};
+		this.selectBetterBouclier = function(name) {
+            var bouclier = Items.get("bouclier", name);
+            if (!bouclier) return;
+            var currentBouclier = this.bouclier();
+
+            var moyenneBouclier = (bouclier.defense[0] + bouclier.defense[1]) / 2;
+            var moyenneCurrent = (currentBouclier.defense[0] + currentBouclier.defense[1]) / 2;
+
+            if (moyenneBouclier > moyenneCurrent) this.selectBouclier(name);
+        };
+		this.has = function(itemId) {
+		    if (Utils.contains(this.data.equipment.arme, itemId)) return "arme";
+		    if (Utils.contains(this.data.equipment.bouclier, itemId)) return "bouclier";
+		    if (Utils.contains(this.data.equipment.magie, itemId)) return "magie";
+		    if (Utils.contains(this.data.equipment.conso, itemId)) return "conso";
+		    if (Utils.contains(this.data.equipment.clef, itemId)) return "clef";
+		    if (Utils.contains(this.data.equipment.ifObj, itemId)) return "ifObj";
+		    return null;
+		};
+		this.usableMagie = function() {
+		    if (!this.get("unlockMana")) return [];
+
+		    var usable = [];
+		    var currentMana = this.data.mana.current;
+		    for (var i in this.data.equipment.magie) {
+		        var magieId = this.data.equipment.magie[i];
+		        var magie = Items.get("magie", magieId);
+		        if (currentMana >= magie.manaCost) usable.push(magieId);
+		    }
+		    return usable;
+		};
+		/**
+		* Renvoi un des objet de soin
+		**/
+		this.getRandSoin = function() {
+		    var soinItem = [];
+		    for (var i in this.data.equipment.conso) {
+		        var consoId = this.data.equipment.conso[i];
+		        var conso = Items.get("conso", consoId);
+		        if (conso && conso.vie[1] > 0) soinItem.push(consoId);
+		        else if (!conso) console.log("Erreur - le conso n'existe pas", consoId) ;
+		    }
+
+		    var randNumber = Utils.rand(0, soinItem.length);
+		    return soinItem[randNumber];
+		};
+
+		// Vrai si le joueur possede tout les objets
+		// Faux si le joueur ne possede pas au moins un des objets
+		this.hasAll = function(items) {
+		    if (!Array.isArray(items)) items = [items];
+		    var found = true;
+            for (var i in items) {
+                var item = items[i];
+                found = found && this.has(item);
+            }
+            return found;
+		};
+
+		/**
+		* Compte le nombre de fois que le joueur possede cet objet
+		**/
+		this.countItem = function(itemId) {
+		    var nb = 0;
+		    nb += Utils.count(this.data.equipment.arme, itemId);
+		    if (!nb) nb += Utils.count(this.data.equipment.bouclier, itemId);
+		    if (!nb) nb += Utils.count(this.data.equipment.magie, itemId);
+		    if (!nb) nb += Utils.count(this.data.equipment.conso, itemId);
+		    if (!nb) nb += Utils.count(this.data.equipment.clef, itemId);
+		    if (!nb) nb += Utils.count(this.data.equipment.ifObj, itemId);
+            return nb;
+		};
+
+		// Vrai si le joueur ne possede aucun des objets
+		// Faux si le joueur possede au moins un des objets
+        this.hasNoOne = function(items) {
+            if (!Array.isArray(items)) items = [items];
+            for (var i in items) {
+                var item = items[i];
+                if (this.has(item))  {
+                    return false;
+                }
+            }
+            return true;
+        };
+
+		this.use = function(itemId, cibles) {
+		    if (!cibles) cibles = this;
+		    if (!Array.isArray(cibles)) cibles = [cibles];
+
+		    var consos = this.data.equipment.conso;
+		    if (Utils.contains(consos, itemId)) {
+		        var item = Items.get("conso", itemId);
+                for (var i in cibles) {
+                    var cible = cibles[i];
+
+                    if (item.degats) {
+                        var baseAttaque = this.data.attaque;
+                        var degats = Utils.rand(baseAttaque + item.degats[0], baseAttaque + item.degats[1], true);
+                        if (degats > 0) cible.hurt(degats, true);
+                    }
+                    if (item.vie) {
+                        var vie = Utils.rand(item.vie[0], item.vie[1], true);
+                        if (vie > 0) cible.addPercentLife(vie);
+                    }
+
+                    if (item.mana) {
+                        var mana = Utils.rand(item.mana[0], item.mana[1], true);
+                        if (mana > 0) cible.addPercentMana(mana);
+                    }
+
+                    if (item.effet) {
+                        for (var i in item.effet) {
+                            var effetId = item.effet[i];
+                            this.etatsManager.check(effetId, cible);
+                        }
+                    }
+
+                    // Action particuliere
+                    if (item.action) item.action(this, cible, this.fightView);
+                    if (item.offensif) cible.showDegats(item.anim);
+		        }
+
+                // On joue le son de l'attaque apres la boucle pour ne pas tuer les oreilles du joueur
+                this.mediatheque.playSound(item.sound + ".wav");
+		        this.removeEquipment("conso", itemId);
+		        return true;
+		    }else {
+		        console.log("Erreur use - objet non possédé", itemId, cibles);
+		        return false;
+		    }
+		};
+		this.spell = function(itemId, cibles) {
+            if (!this.get("unlockMana")) return false;
+            if (!cibles) cibles = this;
+            if (!Array.isArray(cibles)) cibles = [cibles];
+
+            var magies = this.data.equipment.magie;
+            if (Utils.contains(magies, itemId)) {
+                var magie = Items.get("magie", itemId);
+                if (magie.manaCost <= this.get("mana.current")) {
+                    this.addMana(-magie.manaCost);
+                    var level = this.data.level;
+                    for (var i in cibles) {
+                        var cible = cibles[i];
+
+                        if (magie.vie) {
+                            var vie = Utils.rand(magie.vie[0], magie.vie[1], true);
+                            if (vie > 0) cible.addPercentLife(vie);
+                        }
+
+                        var degats = 0;
+                        if (magie.degats) {
+                            var baseAttaque = this.data.attaque;
+                            degats = Utils.rand(magie.degats[0] + baseAttaque, magie.degats[1] + baseAttaque, true);
+                            if (degats > 0) cible.hurt(degats, true, magie.element);
+
+                        }
+                        if (magie.lifeSteal) {
+                            var lifeSteal = Utils.rand(magie.lifeSteal[0], magie.lifeSteal[1], true);
+                            this.stealLife(lifeSteal, degats, cible);
+                        }
+
+                        if (magie.manaSteal) {
+                            var manaSteal = Utils.rand(magie.manaSteal[0], magie.manaSteal[1], true);
+                            this.stealMana(manaSteal, cible);
+                        }
+
+                        // Action particuliere
+                        if (magie.action) magie.action(this, cible, this.fightView);
+
+                        if (magie.effet) {
+                            for (var i in magie.effet) {
+                                var effetId = magie.effet[i];
+                                this.etatsManager.check(effetId, cible);
+                            }
+                        }
+
+                        if (magie.offensif) cible.showDegats(magie.anim);
+                    }
+                    // On joue le son de l'attaque apres la boucle pour ne pas tuer les oreilles du joueur
+                    this.mediatheque.playSound(magie.sound + ".wav");
+                } else console.log("Erreur spell - pas assez de mana", magie, cibles);
+            }else console.log("Erreur spell - sort non possédé", itemId, cibles);
+        };
+
+        /**
+        * Modifications sur la vie
+        **/
+        this.attaque = function(cibles, withDef) {
+            if (!Array.isArray(cibles)) cibles = [cibles];
+
+            if (withDef == undefined) withDef = true;
+
+            var baseAttaque = this.data.attaque;
+            var arme = this.arme();
+
+            var degatsMin = baseAttaque + arme.degats[0];
+            var degatsMax = baseAttaque + arme.degats[1];
+
+            var level = this.get("level");
+            for (var i in cibles) {
+                var cible = cibles[i];
+
+                var degats = Utils.rand(degatsMin, degatsMax, true);
+                if (degats < 0) degats = 0;
+
+                if (arme.lifeSteal) {
+                    var lifeSteal = Utils.rand(arme.lifeSteal[0], arme.lifeSteal[1], true);
+                    this.stealLife(lifeSteal, degats, cible);
+                }
+                if (arme.manaSteal) {
+                    var manaSteal = Utils.rand(arme.manaSteal[0], arme.manaSteal[1], true);
+                    if (manaSteal > 0) this.steal("mana", cible, manaSteal + level)
+                }
+
+                cible.hurt(degats, withDef);
+                cible.showDegats(arme.anim);
+            }
+            // On joue le son de l'attaque apres la boucle pour ne pas tuer les oreilles du joueur
+            arme.offensif = true;
+            this.mediatheque.playSound(arme.sound + ".wav");
+        };
+		this.hurtPercent = function(amount, withDef, element) {
+		    var lifeMax = this.data.life.max;
+            var amount = Math.round(Utils.percent(lifeMax, amount));
+            this.hurt(amount, withDef, element);
+		};
+		this.hurt = function(amount, withDef, element) {
+		    var degats = amount;
+
+		    if (withDef) {
+                var baseDefense = this.data.defense;
+                var bouclier = this.bouclier();
+
+                var defenseMin = baseDefense + bouclier.defense[0];
+                var defenseMax = baseDefense + bouclier.defense[1];
+                var defense = Utils.rand(defenseMin, defenseMax, true);
+
+                degats -= defense;
+		    }
+
+		    if (degats < 0) degats = 0;
+            this.addLife(-degats, element);
+            return degats;
+		};
+
+		/**
+		* Ajoute ou retire de la vie
+		* element est le type de degats recus
+		**/
+		this.addPercentLife = function(amount, element) {
+		    var lifeMax = this.data.life.max;
+		    var amount = Math.round(Utils.percent(lifeMax, amount));
+		    this.addLife(amount, element);
+		};
+		this.addLife = function(amount, element) {
+		    this.addAmountChange(amount, "life", element);
+            this.data.life.current += amount;
+            if (this.data.life.current < 0) this.data.life.current = 0;
+            if (this.data.life.current > this.data.life.max)
+                this.data.life.current = this.data.life.max;
+		};
+
+
+		/**
+		* Modifications sur le mana
+		**/
+		this.addPercentMana = function(amount) {
+            var manaMax = this.data.mana.max;
+            var amount = Math.round(Utils.percent(manaMax, amount));
+            this.addMana(amount);
+        };
+		this.addMana = function(amount) {
+		    if (!this.data.unlockMana) return;
+		    this.addAmountChange(amount, "mana");
+		    this.data.mana.current += amount;
+		    if (this.data.mana.current < 0) this.data.mana.current = 0;
+		    if (this.data.mana.current > this.data.mana.max)
+		        this.data.mana.current = this.data.mana.max;
+		};
+		this.unlockMana = function(amount) {
+		    this.data.unlockMana = true;
+		    if (amount < 0) amount = 0;
+		    this.data.mana.max += amount;
+		    this.addMana(this.data.mana.max);
+		};
+
+        /**
+        * Modifications sur l'xp
+        **/
+		this.addXp = function(amount) {
+		    if (amount > 0) this.addAmountChange(amount, "xp");
+		    this.levelManager.add(amount);
+		};
+		this.levelUp = function() {
+		    this.recompenseManager.addSuccess("LevelEarn", this.data.level);
+		    this.data.attaque++;
+		    this.data.life.max += 25;
+		    if (this.data.unlockMana) this.data.mana.max++;
+
+		    this.addLife(this.data.life.max);
+		    this.addMana(this.data.mana.max);
+		};
+
+		/**
+		* Modification sur l'or
+		**/
+		this.addGold = function(amount) {
+		    if (amount > 0) this.addAmountChange(amount, "gold");
+            this.data.gold += amount;
+            if (this.data.gold < 0) this.data.gold = 0;
+            if (this.data.gold > Utils.MAX_GOLD) {
+                this.data.gold = Utils.MAX_GOLD;
+                this.recompenseManager.addSuccess("MaxGoldEarn");
+            }
+            this.recompenseManager.addSuccess("GoldEarn", this.data.gold);
+        };
+        this.achete = function(itemId) {
+            var item = Items.get(itemId);
+            if (item && item.price) {
+                if(this.data.gold >= item.price) {
+                    this.addGold(-item.price);
+                    this.addEquipment(item.type, item.name);
+                    return true;
+                }else console.log("Erreur achete - l'item est trop chere", itemId, item.price);
+            }else console.log("Erreur achete - l'item n'existe pas ou n'a pas de prix", itemId);
+            return false;
+        };
+        this.vend = function(itemId) {
+            if (this.data.gold >= Utils.MAX_GOLD) return false;
+
+            var item = Items.get(itemId);
+            if (item && item.price) {
+                this.addGold(Math.round(item.price * 0.5));
+                this.removeEquipment(item.type, item.name);
+                return true;
+            }else {
+                console.log("Erreur vend - l'item n'existe pas ou n'a pas de prix", itemId);
+                return false;
+            }
+        };
+
+        this.stealMana = function(baseManaSteal, cible) {
+            var cibleCurrentMana = cible.get("mana.current");
+            var manaSteal = Math.round(Utils.percent(cibleCurrentMana, baseManaSteal));
+            if (manaSteal > 0) this.steal("mana", cible, manaSteal);
+        };
+        this.stealLife = function(baseLifeSteal, degats, cible) {
+            var cibleCurrentLife = cible.get("life.current");
+
+            var lifeSteal = 0;
+            if (degats) {
+                lifeSteal = Math.round(Utils.percent(degats, baseLifeSteal));
+                if (lifeSteal > 0) this.addLife(lifeSteal);
+            } else {
+                lifeSteal = Math.round(Utils.percent(cibleCurrentLife, baseLifeSteal));
+                if (lifeSteal > 0) this.steal("life", cible, lifeSteal);
+            }
+        };
+
+        this.steal = function(attr, cible, value, valueMin) {
+            switch(attr) {
+                case "life":
+                    var steal = cible.get("life.current");
+                    cible.addLife(-value);
+                    steal -= cible.get("life.current");
+                    if (valueMin != undefined) this.addLife(Utils.rand(valueMin, steal, true));
+                    else this.addLife(steal);
+                    break;
+                case "mana":
+                    var steal = cible.get("mana.current");
+                    cible.addMana(-value);
+                    steal -= cible.get("mana.current");
+                    if (valueMin != undefined) this.addMana(Utils.rand(valueMin, steal, true));
+                    else this.addMana(steal);
+                    break;
+                case "gold":
+                    var steal = cible.get("gold");
+                    cible.addGold(-value);
+                    steal -= cible.get("gold");
+                    if (valueMin != undefined) this.addGold(Utils.rand(valueMin, steal, true));
+                    else this.addGold(steal);
+                    break;
+            }
+        };
+
+        /**
+        * Ajoute un montant a perdre ou gagner au buffer d'affichage
+        **/
+        this.addAmountChange = function(amount, type, element) {
+            if (!element) element = "normal";
+            this.amountBuffer.push({
+                "amount" : amount,
+                "type" : type,
+                "element" : element
+            });
+        };
+
+        /**
+        * Affiche le prochain montant perdu ou gagné
+        **/
+        this.showNextAmount = function() {
+            if (this.amountBuffer.length <= 0) return;
+            var infos = this.amountBuffer[0];
+            this.showAmountChange(infos.amount, infos.type, infos.element);
+            this.amountBuffer.splice(0, 1);
+        };
+
+        /**
+        * Animation representant la perte ou le gain d'un montant
+        **/
+        this.showAmountChange= function(amount, type, element) {
+            var left = 0;
+            switch (type) {
+                case "abilitie":
+                    break;
+                case "life":
+                    left = Utils.rand(10, 30, true);
+                    if (amount < 0) {
+                        this.showHurtScreen(element);
+                        amount = amount + "pv";
+                    } else if (amount == 0) {
+                        element = "miss";
+                        amount = this.Textes.get("rate");
+                        left = 0;
+                    } else amount = "+" + amount + "pv";
+                break;
+                case "mana":
+                    if (amount > 0) amount = "+" + amount;
+                    amount += "pm";
+                    left = Utils.rand(35, 45, true);
+                break;
+                case "xp":
+                    if (amount > 0) amount = "+" + amount;
+                    amount += "xp";
+                    left = Utils.rand(55, 65, true);
+                break;
+                case "gold":
+                    if (amount > 0) amount = "+" + amount;
+                    amount += "po";
+                    left = Utils.rand(75, 85, true);
+                break;
+            }
+
+            var degatsDom = $(".game hurts amountchanger:hidden:first");
+            if (degatsDom.length > 0) {
+                degatsDom.removeAttr("style");
+                degatsDom.removeAttr("class");
+                degatsDom.removeAttr("element");
+            }else {
+                degatsDom = $("<amountchanger><amount></amount></amountchanger>");
+                $(".game hurts").append(degatsDom);
+            }
+            degatsDom.find("amount").html(amount);
+            degatsDom.attr("class", type);
+            degatsDom.attr("element", element);
+
+            degatsDom.css({"margin-left" : left + "%"});
+            degatsDom.show();
+            degatsDom.animate({
+                "top" : "-50%",
+                "opacity" : "0"
+            }, 4000, function() {
+                degatsDom.hide();
+            });
+        };
+
+        // Non utilisé
+        this.showDegats = function() {
+        };
+
+        /**
+        * Affiche le masque de prise de degats
+        **/
+        this.showHurtScreen = function(element) {
+            var hurtDom = $(".game hurts").find("hurt." + element);
+            if (hurtDom.length == 0) hurtDom = $(".game hurts hurt.normal");
+            hurtDom.fadeIn(100, function() {
+                hurtDom.fadeOut(200);
+            });
+        };
+
+        this.restore = function() {
+            this.data.life.current = 0;
+            this.addPercentLife(70);
+
+            var percentMana = Utils.toPercent(this.data.mana.current, this.data.mana.max);
+            if (percentMana < 50) {
+                this.data.mana.current = 0;
+                this.addPercentMana(50);
+            }
+
+            this.data.buff = null;
+            this.data.debuff = null;
+        };
+
+        this.saveState = function(key) {
+            this.data.savesData[key] = this.get(key);
+        };
+        this.restoreStates = function() {
+            for (var key in this.data.savesData) {
+                if (key != undefined)
+                    this.set(key, this.data.savesData[key]);
+            }
+            this.data.savesData = {};
+        };
+
+		this.init(parent);
+	};
+});

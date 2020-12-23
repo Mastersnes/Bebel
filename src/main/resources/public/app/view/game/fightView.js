@@ -1,14 +1,479 @@
-define("jquery underscore app/utils/utils app/utils/viewUtils text!app/template/game/fight.html app/manager/monsterManager app/manager/actionManager app/data/items".split(" "),function(e,p,m,s,t,q,u,v){return function(w){this.init=function(a){this.el=e(".fight");this.parent=a;this.Textes=a.Textes;this.mediatheque=a.mediatheque;this.kongregateUtils=a.kongregateUtils;this.saveManager=a.saveManager;this.recompenseManager=a.recompenseManager;this.player=a.playerManager;this.player.fightView=this;this.monsters=
-[];this.actions=[];this.fightLaunch=!1;this.el.hide()};this.fight=function(a,b,c,d,f){this.makeRegles(f);this.fightLaunch=!0;var g=this;e(".histoire").fadeOut();e(".boutique").fadeOut();e(".jeuGarde").fadeOut();e(".quetes").fadeOut();this.textesBuffer=d;this.onWin=b;this.onFail=c;c||(this.onFail=function(){g.parent.gameOver()});this.monsters.length=0;this.actions.length=0;for(var r in a)this.monsters.push(new q(this,a[r],r));this.render();this.el.fadeIn();this.pioche()};this.render=function(){p.templateSettings.variable=
-"data";var a=p.template(t);this.el.html(a({text:this.Textes,monsters:this.monsters}));this.makeEvents();this.renderText()};this.renderText=function(){var a=this.el.find("textContainer");if(this.textesBuffer&&0!=this.textesBuffer.length){a.find("textes").empty();var b=this.textesBuffer[0],c;for(c in b){var d=b[c],f=e("\x3ctexte\x3e\x3c/texte\x3e");f.html(this.Textes.get(d));a.find("textes").append(f)}}else a.hide()};this.addMonstre=function(a,b){b||(b=6);Array.isArray(a)||(a=[a]);if(!(this.aliveMonsters().length+
-1>b)){var c=this.monsters.length,d;for(d in a){var f=a[d],g=this.firstDeadMonster(f);g?g.restore():this.monsters.push(new q(this,f,c+parseInt(d)))}this.render()}};this.pioche=function(){for(var a=this,b=this.player,c=b.currentArme(),d=b.currentBouclier(),f=b.usableMagie(),b=[].concat(b.get("equipment.conso")),g=this.actions.length=0,e=0,n=this.player.get("mana").current;5>this.actions.length;){var h=["arme","bouclier"];f.length&&h.push("magie");b.length&&h.push("conso");var k=m.rand(0,h.length),h=
-h[k];2<=this.actions.length&&(2>e&&(h="arme"),1>g&&(h="bouclier"));var l;switch(h){case "arme":e++;l=c;break;case "bouclier":g++;l=d;break;case "magie":if(!f.length)continue;k=m.rand(0,f.length);l=f[k];f.splice(k,1);h=v.get("magie",l);if(h.manaCost>n)continue;else n-=h.manaCost;break;case "conso":if(!b.length)continue;k=m.rand(0,b.length);l=b[k];b.splice(k,1)}this.actions.push(new u(this,l))}this.eraseCurrentPioche();setTimeout(function(){a.renderNewPioche();s.verticalCenter()},300)};this.eraseCurrentPioche=
-function(){this.el.find("action").attr("state","erase")};this.renderNewPioche=function(){this.el.find("action name").empty();for(var a in this.actions){var b=this.actions[a],c=this.el.find("action:nth("+a+")");c.find("name").html(this.Textes.get(b.name+"-action"));c.attr("state","new");c.attr("id",a);c.attr("type",b.name)}this.el.find("action").removeAttr("state")};this.loop=function(){this.fightLaunch&&(0>=this.player.get("life.current")?this.fail():(e("carnet").hasClass("hide")||e("carnet").addClass("hide"),
-this.refreshMonsters(),this.refreshActions()))};this.refreshMonsters=function(){var a=!0,b;for(b in this.monsters){var c=this.monsters[b],d=this.el.find("monster#"+b);d.find("name").html(c.completeName());var f=c.get("life"),g=m.toPercent(f.current,f.max)+"%";d.find(".life current").css({width:g});g=c.get("mana");g.max?(g=m.toPercent(g.current,g.max)+"%",d.find(".mana current").css({width:g})):d.find(".mana").hide();this.refreshMonsterEtats(c,d);0>=f.current?d.fadeOut("fast"):(a=!1,d.show())}a&&this.win()};
-this.refreshMonsterEtats=function(a,b){var c=a.data.buff;c?(b.find("etat#buff").attr("type",c.element),b.find("etat#buff").fadeIn()):(b.find("etat#buff").attr("type",null),b.find("etat#buff").fadeOut());(c=a.data.debuff)?(b.find("etat#debuff").attr("type",c.element),b.find("etat#debuff").fadeIn()):(b.find("etat#debuff").attr("type",null),b.find("etat#debuff").fadeOut())};this.refreshActions=function(){for(var a in this.actions){var b=this.actions[a],c=this.el.find("action:nth("+a+")"),d=c.attr("state");
-b.state?c.attr("state",b.state):"used"!=d&&"pending"!=d||c.removeAttr("state");c.find("name").html(this.Textes.get(b.name+"-action"))}};this.makeEvents=function(){var a=this;this.el.find("monster").click(function(){if(a.pendingAction){var b=e(this).attr("id"),b=a.monsters[b];0>=b.get("life").current||a.pendingAction.useOn(b)}});this.el.find("monster").hover(function(){a.pendingAction&&e(this).addClass("actif")},function(){e(this).removeClass("actif")});this.el.find("action").click(function(){if(!e(this).attr("state")){var b=
-e(this).attr("id"),b=a.actions[b];b.state||(a.closePending(),b.click())}});this.el.contextmenu(function(){a.closePending();return!1});this.el.find("textContainer").click(function(){a.textesBuffer.splice(0,1);a.renderText()})};this.aliveMonsters=function(){var a=[],b;for(b in this.monsters){var c=this.monsters[b];0<c.get("life").current&&a.push(c)}return a};this.firstDeadMonster=function(a){for(var b in this.monsters){var c=this.monsters[b];if(0>=c.get("life").current&&c.name==a)return c}return null};
-this.otherMonsters=function(a){var b=[],c;for(c in this.monsters){var d=this.monsters[c];0<d.get("life").current&&d!=a&&b.push(d)}return b};this.setPending=function(a){a&&(this.pendingAction=a,this.pendingAction.state="pending",this.showCiblage())};this.closePending=function(){this.pendingAction&&(this.pendingAction=this.pendingAction.state=null,this.closeCiblage())};this.showCiblage=function(){this.el.find("cible").fadeIn()};this.closeCiblage=function(){this.el.find("cible").fadeOut()};this.playAnim=
-function(a,b){var c=e(""),d;for(d in a)c=c.add("monster#"+a[d].index+" anim");c.addClass(b);c.fadeIn(200,function(){c.fadeOut(500,function(){c.removeClass(b)})})};this.monstersAttaque=function(a){var b=this,c=this.aliveMonsters();this.eraseCurrentPioche();this.recursiveAttaque(0,c,a,function(){b.pioche()})};this.recursiveAttaque=function(a,b,c,d){if(a>=b.length)return d();var f=this,g=b[a],e=this.el.find("monster#"+g.index);e.animate({top:"15%"},200,function(){g.launchAttaque(e,f.player,b,c);e.animate({top:"0%"},
-200,function(){f.recursiveAttaque(a+1,b,c,d)})})};this.win=function(){this.endFight();var a=0,b=0,c;for(c in this.monsters)var d=this.monsters[c],a=a+d.data.gold,b=b+d.data.xp;this.player.addGold(a);this.player.addXp(b);this.onWin()};this.fail=function(){this.endFight();this.onFail()};this.endFight=function(){this.player.restoreStates();this.fightLaunch=!1};this.makeRegles=function(a){this.reglesSaver={};if(a)for(var b in a)switch(a[b]){case "no-weapon":this.player.saveState("equipment.currentArme");
-this.player.saveState("equipment.currentBouclier");this.player.selectArme("poing");this.player.selectBouclier("bras");break;case "no-consos":this.player.saveState("equipment.conso"),this.player.set("equipment.conso",[])}};this.init(w)}});
+'use strict';
+define(["jquery", "underscore",
+        "app/utils/utils",
+        "app/utils/viewUtils",
+        "text!app/template/game/fight.html",
+        "app/manager/monsterManager",
+        "app/manager/actionManager",
+        "app/data/items"
+        ], function($, _, Utils, ViewUtils, page, MonsterManager, ActionManager, Items){
+    return function(parent){
+        this.init = function(parent) {
+        	this.el = $(".fight");
+
+            this.parent = parent;
+            this.Textes = parent.Textes;
+            this.mediatheque = parent.mediatheque;
+
+            // Manager
+            this.kongregateUtils = parent.kongregateUtils;
+            this.saveManager = parent.saveManager;
+            this.recompenseManager = parent.recompenseManager;
+            this.player = parent.playerManager;
+            this.player.fightView = this;
+
+            this.monsters = [];
+            this.actions = [];
+            this.fightLaunch = false;
+            this.el.hide();
+        };
+
+        /**
+        * Lance un nouveau combat
+        **/
+        this.fight = function(adversaires, onWin, onFail, textes, regles) {
+            this.makeRegles(regles);
+
+            this.fightLaunch = true;
+            var that = this;
+            $(".histoire").fadeOut();
+            $(".boutique").fadeOut();
+            $(".jeuGarde").fadeOut();
+            $(".quetes").fadeOut();
+
+            this.textesBuffer = textes;
+            this.onWin = onWin;
+            this.onFail = onFail;
+            if (!onFail) this.onFail = function() {
+                that.parent.gameOver();
+            };
+
+            this.monsters.length = 0;
+            this.actions.length = 0;
+
+            for (var i in adversaires) {
+                var adversaire = adversaires[i];
+                this.monsters.push(new MonsterManager(this, adversaire, i));
+            }
+
+            this.render();
+
+            this.el.fadeIn();
+            this.pioche();
+        };
+
+        this.render = function() {
+            _.templateSettings.variable = "data";
+            var template = _.template(page);
+            var templateData = {
+                    text : this.Textes,
+                    monsters : this.monsters
+            };
+            this.el.html(template(templateData));
+
+            this.makeEvents();
+
+            this.renderText();
+        };
+
+        this.renderText = function() {
+            var textContainer = this.el.find("textContainer");
+            if (!this.textesBuffer || this.textesBuffer.length == 0) {
+                textContainer.hide();
+                return;
+            }
+            textContainer.find("textes").empty();
+            var currentTextes = this.textesBuffer[0];
+            for (var i in currentTextes) {
+                var texte = currentTextes[i];
+                var textDom = $("<texte></texte>");
+                textDom.html(this.Textes.get(texte));
+                textContainer.find("textes").append(textDom);
+            }
+        };
+
+        /**
+        * Ranime ou ajoute des monstres supplementaires au plateau
+        **/
+        this.addMonstre = function(monstres, max) {
+            if (!max) max = 6;
+            if (!Array.isArray(monstres)) monstres = [monstres];
+            var aliveMonsters = this.aliveMonsters();
+            if (aliveMonsters.length + 1 > max) return;
+
+            var base = this.monsters.length;
+            for (var i in monstres) {
+                var adversaire = monstres[i];
+                var monstre = this.firstDeadMonster(adversaire);
+                if (monstre) monstre.restore();
+                else this.monsters.push(new MonsterManager(this, adversaire, base + parseInt(i)));
+            }
+            this.render();
+        };
+
+        this.pioche = function() {
+            var PIOCHE_MAX = 5;
+
+            var armeMin = 2;
+            var bouclierMin = 1;
+
+            var that = this;
+            var player = this.player;
+            var arme = player.currentArme();
+            var bouclier = player.currentBouclier();
+            var magies = player.usableMagie();
+            var consosDispo = [].concat(player.get("equipment.conso"));
+
+            this.actions.length = 0;
+
+            var bouclierFound = 0;
+            var armeFound = 0;
+            var manaStock = this.player.get("mana").current;
+            while (this.actions.length < PIOCHE_MAX) {
+                var actionsPossibles = ["arme", "bouclier"];
+                if (magies.length) actionsPossibles.push("magie");
+                if (consosDispo.length) actionsPossibles.push("conso");
+
+                var randNumber = Utils.rand(0, actionsPossibles.length);
+                var randType = actionsPossibles[randNumber];
+
+                if (this.actions.length >= PIOCHE_MAX-(armeMin + bouclierMin)) {
+                    // On oblige d'avoir au moins un bouclier et deux arme
+                    if (armeFound < armeMin) randType = "arme";
+                    if (bouclierFound < bouclierMin) randType = "bouclier";
+                }
+
+                var actionFound;
+                switch (randType) {
+                    case "arme":
+                        armeFound++;
+                        actionFound = arme;
+                        break;
+                    case "bouclier":
+                        bouclierFound++;
+                        actionFound = bouclier;
+                        break;
+                    case "magie":
+                        if (!magies.length) continue;
+                        var randNumber = Utils.rand(0, magies.length);
+                        var actionFound = magies[randNumber];
+                        magies.splice(randNumber, 1);
+                        var magie = Items.get("magie", actionFound);
+                        if (magie.manaCost > manaStock) continue;
+                        else manaStock -= magie.manaCost;
+                        break;
+                    case "conso":
+                        if (!consosDispo.length) continue;
+                        var randNumber = Utils.rand(0, consosDispo.length);
+                        actionFound = consosDispo[randNumber];
+                        consosDispo.splice(randNumber, 1);
+                        break;
+                }
+                this.actions.push(new ActionManager(this, actionFound));
+            }
+
+            this.eraseCurrentPioche();
+            setTimeout(function() {
+                that.renderNewPioche();
+                ViewUtils.verticalCenter();
+            }, 300);
+        };
+
+        this.eraseCurrentPioche = function() {
+            this.el.find("action").attr("state", "erase");
+        };
+        this.renderNewPioche = function() {
+            var that = this;
+            this.el.find("action name").empty();
+            for (var i in this.actions) {
+                var action = this.actions[i];
+                var actionDom = this.el.find("action:nth("+i+")");
+                actionDom.find("name").html(this.Textes.get(action.name + "-action"));
+                actionDom.attr("state", "new");
+                actionDom.attr("id", i);
+                actionDom.attr("type", action.name);
+            }
+            this.el.find("action").removeAttr("state");
+        };
+
+
+        this.loop = function() {
+            if (!this.fightLaunch) return;
+
+            if (this.player.get("life.current") <= 0) {
+                this.fail();
+            }else {
+                if (!$("carnet").hasClass("hide")) $("carnet").addClass("hide");
+                this.refreshMonsters();
+                this.refreshActions();
+            }
+        };
+
+        /**
+        * Raffraichit l'etat des monstres
+        **/
+        this.refreshMonsters = function() {
+            var allDied = true;
+            for (var i in this.monsters) {
+                var monster = this.monsters[i];
+                var monsterDom = this.el.find("monster#"+i);
+
+                monsterDom.find("name").html(monster.completeName());
+
+                var life = monster.get("life");
+                var percent = Utils.toPercent(life.current, life.max) + "%";
+                monsterDom.find(".life current").css({
+                    "width": percent
+                });
+
+                var mana = monster.get("mana");
+                if (mana.max) {
+                    percent = Utils.toPercent(mana.current, mana.max) + "%";
+                    monsterDom.find(".mana current").css({
+                        "width": percent
+                    });
+                }else monsterDom.find(".mana").hide();
+
+                this.refreshMonsterEtats(monster, monsterDom);
+
+                if (life.current <= 0) monsterDom.fadeOut("fast");
+                else {
+                    allDied = false
+                    monsterDom.show();
+                }
+            }
+            if (allDied) this.win();
+        };
+
+        this.refreshMonsterEtats = function(monster, monsterDom) {
+            var buff = monster.data.buff;
+            if (buff) {
+                monsterDom.find("etat#buff").attr("type", buff.element);
+                monsterDom.find("etat#buff").fadeIn();
+            } else {
+                monsterDom.find("etat#buff").attr("type", null);
+                monsterDom.find("etat#buff").fadeOut();
+            }
+
+            var debuff = monster.data.debuff;
+            if (debuff) {
+                monsterDom.find("etat#debuff").attr("type", debuff.element);
+                monsterDom.find("etat#debuff").fadeIn();
+            } else {
+                monsterDom.find("etat#debuff").attr("type", null);
+                monsterDom.find("etat#debuff").fadeOut();
+            }
+        };
+
+        /**
+        * Raffraichit l'etat des actions
+        **/
+        this.refreshActions = function() {
+            for (var i in this.actions) {
+                var action = this.actions[i];
+                var actionDom = this.el.find("action:nth("+i+")");
+
+                var domState = actionDom.attr("state");
+                if (action.state) actionDom.attr("state", action.state);
+                else if (domState == "used" || domState == "pending") {
+                    actionDom.removeAttr("state");
+                }
+
+                actionDom.find("name").html(this.Textes.get(action.name + "-action"));
+            }
+        };
+
+        this.makeEvents = function() {
+            var that = this;
+            this.el.find("monster").click(function() {
+                if (!that.pendingAction) return;
+                var actionDom = that.pendingAction;
+                var id = $(this).attr("id");
+                var monster = that.monsters[id];
+                if (monster.get("life").current <= 0) return;
+
+                that.pendingAction.useOn(monster);
+            });
+            this.el.find("monster").hover(function() {
+                if (!that.pendingAction) return;
+                $(this).addClass("actif");
+            }, function() {
+                $(this).removeClass("actif");
+            });
+            this.el.find("action").click(function() {
+                if ($(this).attr("state")) return;
+                var actionId = $(this).attr("id");
+                var action = that.actions[actionId];
+                if (action.state) return;
+
+                that.closePending();
+                action.click();
+            });
+            this.el.contextmenu(function() {
+                that.closePending();
+                return false;
+            });
+
+            this.el.find("textContainer").click(function() {
+                that.textesBuffer.splice(0, 1);
+                that.renderText();
+            });
+        };
+
+        /**
+        * Renvoi les monstres encore en vie
+        **/
+        this.aliveMonsters = function() {
+            var alive = [];
+            for (var i in this.monsters) {
+                var monster = this.monsters[i];
+                if (monster.get("life").current > 0)
+                    alive.push(monster);
+            }
+            return alive;
+        };
+
+        /**
+        * Renvoi le premier monstre morts portant le nom indiqué
+        **/
+        this.firstDeadMonster = function(name) {
+            for (var i in this.monsters) {
+                var monster = this.monsters[i];
+                if (monster.get("life").current <= 0 && monster.name == name)
+                    return monster;
+            }
+            return null;
+        };
+
+        /**
+        * Renvoi les monstres encore en vie autre que celui indiqué
+        **/
+        this.otherMonsters = function(monsterExclude) {
+            var alive = [];
+            for (var i in this.monsters) {
+                var monster = this.monsters[i];
+                if (monster.get("life").current > 0 && monster != monsterExclude)
+                    alive.push(monster);
+            }
+            return alive;
+        };
+
+        this.setPending = function(action) {
+            if (!action) return;
+            this.pendingAction = action;
+            this.pendingAction.state = "pending";
+            this.showCiblage();
+        };
+        this.closePending = function() {
+            if (!this.pendingAction) return;
+            this.pendingAction.state = null;
+            this.pendingAction = null;
+            this.closeCiblage();
+        };
+
+        this.showCiblage = function() {
+            this.el.find("cible").fadeIn();
+        };
+        this.closeCiblage = function() {
+            this.el.find("cible").fadeOut();
+        };
+
+        /**
+        * Joue les animations de degats
+        **/
+        this.playAnim = function(cibles, anim) {
+            var ciblesDom = $("");
+            for (var i in cibles) {
+                var cible = cibles[i];
+                var index = cible.index;
+                ciblesDom = ciblesDom.add("monster#"+index+" anim");
+            }
+
+            ciblesDom.addClass(anim);
+            ciblesDom.fadeIn(200, function() {
+                ciblesDom.fadeOut(500, function() {
+                    ciblesDom.removeClass(anim);
+                });
+            });
+        };
+
+        this.monstersAttaque = function(blockSound) {
+            var that = this;
+            var aliveMonsters = this.aliveMonsters();
+            this.eraseCurrentPioche();
+            this.recursiveAttaque(0, aliveMonsters, blockSound, function() {
+                that.pioche();
+            });
+        };
+        this.recursiveAttaque = function(index, aliveMonsters, blockSound, endFunction) {
+            if (index >= aliveMonsters.length) return endFunction();
+            var that = this;
+            var monster = aliveMonsters[index];
+            var monsterDom = this.el.find("monster#"+monster.index);
+
+            monsterDom.animate({
+                "top" : "15%"
+            }, 200, function() {
+                monster.launchAttaque(monsterDom, that.player, aliveMonsters, blockSound);
+
+                monsterDom.animate({
+                    "top" : "0%"
+                }, 200, function() {
+                    that.recursiveAttaque(index+1, aliveMonsters, blockSound, endFunction);
+                });
+            });
+        };
+
+        this.win = function() {
+            this.endFight();
+
+            var goldEarn = 0;
+            var xpEarn = 0;
+
+            for (var i in this.monsters) {
+                var adversaire = this.monsters[i];
+                goldEarn += adversaire.data.gold;
+                xpEarn += adversaire.data.xp;
+            }
+
+            this.player.addGold(goldEarn);
+            this.player.addXp(xpEarn);
+
+            this.onWin();
+        };
+
+        this.fail = function() {
+            this.endFight();
+            this.onFail();
+        };
+
+        this.endFight = function() {
+            this.player.restoreStates();
+            this.fightLaunch = false;
+        };
+
+        this.makeRegles = function(regles) {
+            this.reglesSaver = {};
+            if (!regles) return;
+
+            for (var i in regles) {
+                var regle = regles[i];
+
+                switch (regle) {
+                    case "no-weapon" :
+                        this.player.saveState("equipment.currentArme");
+                        this.player.saveState("equipment.currentBouclier");
+                        this.player.selectArme("poing");
+                        this.player.selectBouclier("bras");
+                    break;
+                    case "no-consos" :
+                        this.player.saveState("equipment.conso");
+                        this.player.set("equipment.conso", []);
+                    break;
+                }
+            }
+        };
+
+        this.init(parent);
+    };
+});

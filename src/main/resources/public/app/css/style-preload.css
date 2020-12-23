@@ -1,1 +1,11 @@
-preload{position:absolute;display:block;left:0;right:0;width:100%;height:100%;background-repeat:no-repeat;background-size:100% 100%}
+/**
+* Preload
+**/
+preload {
+	position: absolute;
+	display: block;
+	left:0; right:0;
+	width: 100%; height: 100%;
+	background-repeat: no-repeat;
+    background-size: 100% 100%;
+}

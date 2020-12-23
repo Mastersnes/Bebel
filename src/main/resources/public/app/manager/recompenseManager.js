@@ -1,2 +1,39 @@
-define(["jquery","underscore","app/utils/utils"],function(d,e,f){return function(c){this.init=function(a){this.el="";this.parent=a;this.Textes=a.Textes;this.saveManager=a.saveManager;this.mediatheque=a.mediatheque;this.complete=this.saveManager.load("success").successComplete};this.reloadSuccess=function(){for(var a in this.complete)this.addSuccess(a,this.complete[a])};this.addSuccess=function(a,b){void 0==b&&(b=1);this.parent.kongregateUtils.score(a,b);if(void 0!=this.complete[a])return!1;this.complete[a]=
-b;this.saveManager.save("successComplete",this.complete);return!0};this.init(c)}});
+/*global define */
+define(["jquery",
+        'underscore',
+        "app/utils/utils"
+        ],
+function($, _, Utils) {
+	'use strict';
+
+	return function(parent) {
+		this.init = function(parent) {
+			this.el = "";
+			this.parent = parent;
+			this.Textes = parent.Textes;
+
+			this.saveManager = parent.saveManager;
+			this.mediatheque = parent.mediatheque;
+
+			this.complete = this.saveManager.load("success").successComplete;
+		};
+
+		this.reloadSuccess = function() {
+		    for (var success in this.complete) {
+		        this.addSuccess(success, this.complete[success]);
+		    }
+		};
+
+		this.addSuccess = function(success, val) {
+		    if (val == undefined) val = 1;
+			this.parent.kongregateUtils.score(success, val);
+			if (this.complete[success] != undefined) return false;
+
+			this.complete[success] = val;
+			this.saveManager.save("successComplete", this.complete);
+			return true;
+		};
+
+		this.init(parent);
+	};
+});

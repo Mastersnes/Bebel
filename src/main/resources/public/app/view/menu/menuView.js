@@ -1,7 +1,191 @@
-define("jquery underscore app/manager/sceneManager app/utils/utils app/utils/popupUtils app/utils/kongregateUtils app/data/textes app/utils/mediatheque app/manager/saveManager text!app/template/menu/menu.html app/view/game/gameView app/view/menu/optionView app/view/menu/traductionsView app/view/menu/creditView".split(" "),function(a,f,e,g,h,k,d,l,m,n,p,q,r,s){return function(){this.init=function(){this.el=a("#app");a(".text#loading").html(d.get("chargement"));this.scene=new e(this);this.mediatheque=
-new l;this.mediatheque.load("music/menu.mp3");this.mediatheque.loadAll();this.kongregateUtils=new k(d);this.saveManager=new m(this.kongregateUtils,d);this.Textes=d;this.Textes.setSaveManager(this.saveManager);this.Textes.loadLanguage();var b=this;-1<window.location.href.indexOf("kongregate")?(console.log("kongregate Load"),this.kongregateUtils.load(function(){b.render()})):(console.log("Pas sur kongregate !"),this.render())};this.render=function(){this.Textes.loadLanguage();f.templateSettings.variable=
-"data";var b=f.template(n),e=this.saveManager.checkSave();this.el.html(b({text:d,saveExists:e}));this.kongregateUtils.render();this.makeEvents();var c=this;a(".app-container").removeClass("bebel");this.scene.resize();setTimeout(function(){a(".text#loading").fadeOut("slow");a(".text#starting").fadeIn("slow");a(".preload").empty();c.scene.resize();c.optionView=new q(c);c.creditView=new s(c);c.traductionsView=new r(c)},1E3)};this.refreshTextes=function(){this.el.find("bouton#new span").html(this.Textes.get("newGame"));
-this.el.find("bouton#load span").html(this.Textes.get("continue"));this.el.find("bouton#didacticiel span").html(this.Textes.get("didacticiel"));this.el.find("bouton#option span").html(this.Textes.get("options"));this.el.find("bouton#traductions span").html(this.Textes.get("traductions"));this.el.find("bouton#credit span").html(this.Textes.get("credits"));this.optionView.refreshTextes();this.creditView.refreshTextes();this.traductionsView.refreshTextes()};this.onResize=function(){this.traductionsView.onResize()};
-this.makeEvents=function(){var b=this;a("#new").click(function(){b.saveManager.checkSave()?(b.el.find("carnet boutons").fadeOut(),h.confirm(d,"eraseSave",function(){b.saveManager.eraseSave();b.loadGame()},function(){b.el.find("carnet boutons").fadeIn()},"continuerButton","cancelButton")):(b.saveManager.eraseSave(),b.loadGame())});a("#didacticiel").click(function(){b.loadGame(!0)});a("#load").click(function(){b.saveManager.loadSave();b.loadGame()});a("#option").click(function(){b.optionView.show()});
-a("#traductions").click(function(){b.traductionsView.showFiles()});a("#credit").click(function(){b.creditView.show()});a("#login").click(function(){b.kongregateUtils.login()});a("bouton").hover(function(){a(this).find("case").addClass("coche")},function(){a(this).find("case").removeClass("coche")});a(".page.bebel").click(function(){b.mediatheque.stopAllMusic();setTimeout(function(){b.mediatheque.play("music/menu.mp3");a(".page.bebel").fadeOut("slow",function(){a(".page.bebel").remove();a(".text#loading").remove()})},
-100)});a("fullscreen").click(function(){g.fullscreen()?a("fullscreen").removeClass("exit"):a("fullscreen").addClass("exit");b.onResize()});a("body").contextmenu(function(){return!1})};this.loadGame=function(a){new p(this,a)};this.init()}});
+/*global define */
+define(["jquery",
+        'underscore',
+        "app/manager/sceneManager",
+        "app/utils/utils",
+        "app/utils/popupUtils",
+        "app/utils/kongregateUtils",
+        "app/data/textes",
+        "app/utils/mediatheque",
+        "app/manager/saveManager",
+        "text!app/template/menu/menu.html",
+        "app/view/game/gameView",
+        "app/view/menu/optionView",
+        "app/view/menu/traductionsView",
+        "app/view/menu/creditView"],
+function($, _, SceneManager, Utils, PopupUtils, Kongregate,
+         Textes, Mediatheque, SaveManager, page,
+         GameView, OptionView, TraductionsView, CreditView) {
+	'use strict';
+
+	return function() {
+		this.init = function() {
+		    this.el = $("#app");
+		    
+		    $(".text#loading").html(Textes.get("chargement"));
+		    
+		    this.scene = new SceneManager(this);
+		    
+            this.mediatheque = new Mediatheque();
+            this.mediatheque.load("music/menu.mp3");
+            this.mediatheque.loadAll();
+
+            this.kongregateUtils = new Kongregate(Textes);
+            this.saveManager = new SaveManager(this.kongregateUtils, Textes);
+            this.Textes = Textes;
+            this.Textes.setSaveManager(this.saveManager);
+            this.Textes.loadLanguage();
+
+            var that = this;
+			if (window.location.href.indexOf("kongregate") > -1) {
+	            console.log("kongregate Load");
+				this.kongregateUtils.load(function() {
+	            	that.render();
+	            });
+			}else {
+				console.log("Pas sur kongregate !");
+				this.render();
+			}
+		};
+
+		this.render = function() {
+			this.Textes.loadLanguage();
+			_.templateSettings.variable = "data";
+			var template = _.template(page);
+			
+			var saveExists = this.saveManager.checkSave();
+			
+			var templateData = {
+					text : Textes,
+					saveExists : saveExists
+			};
+			this.el.html(template(templateData));
+			this.kongregateUtils.render();
+			this.refresh();
+			
+			this.makeEvents();
+			
+			var that = this;
+			$(".app-container").removeClass("bebel");
+			this.scene.resize();
+			setTimeout(function() {
+				$(".text#loading").fadeOut("slow");
+				$(".text#starting").fadeIn("slow");
+				$(".preload").empty();
+				that.scene.resize();
+
+				that.optionView = new OptionView(that);
+				that.creditView = new CreditView(that);
+				that.traductionsView = new TraductionsView(that);
+			}, 1000);
+		};
+
+		this.refresh = function() {
+		    if (this.mediatheque.isMute("sound"))
+                this.el.find("son#sound").addClass("mute");
+            else this.el.find("son#sound").removeClass("mute");
+
+            if (this.mediatheque.isMute("music"))
+                this.el.find("son#music").addClass("mute");
+            else this.el.find("son#music").removeClass("mute");
+		};
+
+		this.refreshTextes = function() {
+		    this.el.find("bouton#new span").html(this.Textes.get("newGame"));
+		    this.el.find("bouton#load span").html(this.Textes.get("continue"));
+		    this.el.find("bouton#didacticiel span").html(this.Textes.get("didacticiel"));
+		    this.el.find("bouton#option span").html(this.Textes.get("options"));
+		    this.el.find("bouton#traductions span").html(this.Textes.get("traductions"));
+		    this.el.find("bouton#credit span").html(this.Textes.get("credits"));
+
+		    this.optionView.refreshTextes();
+		    this.creditView.refreshTextes();
+		    this.traductionsView.refreshTextes();
+		};
+
+		this.onResize = function() {
+		    this.traductionsView.onResize();
+        };
+		
+		this.makeEvents = function() {
+			var that = this;
+			$("#new").click(function() {
+			    if (that.saveManager.checkSave()) {
+			        that.el.find("carnet boutons").fadeOut();
+					PopupUtils.confirm(Textes, "eraseSave", function() {
+				        that.saveManager.eraseSave();
+						that.loadGame();
+				    }, function() {
+				        that.el.find("carnet boutons").fadeIn();
+				    }, "continuerButton", "cancelButton");
+			    }else {
+			        that.saveManager.eraseSave();
+			    	that.loadGame();
+			    }
+			});
+			$("#didacticiel").click(function() {
+			    that.loadGame(true);
+			});
+			$("#load").click(function() {
+				that.saveManager.loadSave();
+			    that.loadGame();
+			});
+			$("#option").click(function() {
+				that.optionView.show();
+			});
+			$("#traductions").click(function() {
+			    that.traductionsView.showFiles();
+			});
+			$("#credit").click(function() {
+			    that.creditView.show();
+			});
+
+			$("#login").click(function() {
+				that.kongregateUtils.login();
+			});
+			
+			$("bouton").hover(function() {
+				$(this).find("case").addClass("coche");
+			}, function() {
+				$(this).find("case").removeClass("coche");
+			});
+			
+			$(".page.bebel").click(function() {
+				that.mediatheque.stopAllMusic();
+				setTimeout(function() {
+					that.mediatheque.play("music/menu.mp3");
+					$(".page.bebel").fadeOut("slow", function() {
+						$(".page.bebel").remove();
+						$(".text#loading").remove();
+					});
+				}, 100);
+			});
+			
+			$("fullscreen").click(function() {
+				var isFullscreen = Utils.fullscreen();
+				if (isFullscreen) $("fullscreen").removeClass("exit");
+				else $("fullscreen").addClass("exit");
+				that.onResize();
+			});
+
+			this.el.find("son#sound").click(function(e) {
+                that.mediatheque.mute("sound");
+                that.refresh();
+            });
+            this.el.find("son#music").click(function(e) {
+                that.mediatheque.mute("music");
+                that.refresh();
+            });
+
+			$("body").contextmenu(function() {
+				return false;
+			});
+		};
+		
+		this.loadGame = function(didacticiel) {
+			new GameView(this, didacticiel);
+		};
+
+		this.init();
+	};
+});
