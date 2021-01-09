@@ -1,18 +1,1 @@
-'use strict';
-define(["jquery"], function($){
-	return {
-		/**
-		* Centre verticalement en javascript lorsque la page est bien chargée
-		**/
-		verticalCenter : function() {
-			$(document).ready(function() {
-				$(".js-center").each(function(index, value) {
-					var me = $(value);
-					var pere = $(me.parent());
-					var topPosition = pere.offset().top + (pere.height()/2) - (me.height()/2);
-					me.offset({top : topPosition});
-				});
-			});
-		}
-	};
-});
+define(["jquery"],function(a){return{verticalCenter:function(){a(document).ready(function(){a(".js-center").each(function(e,d){var c=a(d),b=a(c.parent()),b=b.offset().top+b.height()/2-c.height()/2;c.offset({top:b})})})}}});

@@ -1,14 +1,1 @@
-'use strict';
-define(["jquery", "app/utils/utils"], function($, Utils){
-	var data = {
-	};
-
-	return {
-		get : function(key) {
-			return data[key];
-		},
-		list : function() {
-		    return data;
-		}
-	};
-});
+define(["jquery","app/utils/utils"],function(c,d){var a={};return{get:function(b){return a[b]},list:function(){return a}}});

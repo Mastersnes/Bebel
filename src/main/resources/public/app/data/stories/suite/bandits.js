@@ -1,16 +1,1 @@
-'use strict';
-define(["app/data/stories/suite/bandits/porte",
-    "app/data/stories/suite/bandits/village",
-    "app/data/stories/suite/bandits/arene"],
-		function(Porte, Village, Arene) {
-			var data = {};
-			return {
-				get : function(key) {
-					var result = data[key];
-                    if (!result) result = Porte.get(key);
-                    if (!result) result = Village.get(key);
-                    if (!result) result = Arene.get(key);
-					return result;
-				}
-			};
-		});
+define(["app/data/stories/suite/bandits/porte","app/data/stories/suite/bandits/village","app/data/stories/suite/bandits/arene"],function(c,d,e){var f={};return{get:function(b){var a=f[b];a||(a=c.get(b));a||(a=d.get(b));a||(a=e.get(b));return a}}});

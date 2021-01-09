@@ -1,15 +1,1 @@
-'use strict';
-define(["app/data/stories/suite/ville",
-    "app/data/stories/suite/bandits"
-],
-		function(Ville, Bandits) {
-			var data = {};
-			return {
-				get : function(key) {
-					var result = data[key];
-                    if (!result) result = Ville.get(key);
-                    if (!result) result = Bandits.get(key);
-					return result;
-				}
-			};
-		});
+define(["app/data/stories/suite/ville","app/data/stories/suite/bandits"],function(c,d){var e={};return{get:function(b){var a=e[b];a||(a=c.get(b));a||(a=d.get(b));return a}}});
