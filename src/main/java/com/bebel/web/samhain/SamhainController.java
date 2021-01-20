@@ -28,7 +28,7 @@ public class SamhainController {
     @Autowired
     private SamhainDao dao;
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping("/getSave")
     @ResponseBody
     public ResponseEntity<SamhainResponse> getSave(@RequestBody final KongregateRequest request) {
@@ -55,7 +55,7 @@ public class SamhainController {
         }
     }
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping(value = "/save")
     @ResponseBody
     public ResponseEntity<GeneralResponse> save(@RequestBody final SamhainSaveRequest request) {
@@ -77,7 +77,7 @@ public class SamhainController {
         }
     }
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping(value = "/sendTrad")
     @ResponseBody
     public ResponseEntity<GeneralResponse> addTrad(@RequestBody final SamhainNewTradRequest request) {

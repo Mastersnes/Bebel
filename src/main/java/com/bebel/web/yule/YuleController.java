@@ -21,7 +21,7 @@ public class YuleController {
     @Autowired
     private YuleDao dao;
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping("/getSave")
     @ResponseBody
     public ResponseEntity<YuleResponse> getSave(@RequestBody final KongregateRequest request) {
@@ -48,7 +48,7 @@ public class YuleController {
         }
     }
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping(value = "/save")
     @ResponseBody
     public ResponseEntity<GeneralResponse> save(@RequestBody final YuleSaveRequest request) {

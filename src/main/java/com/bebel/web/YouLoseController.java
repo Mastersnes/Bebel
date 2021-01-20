@@ -27,7 +27,7 @@ public class YouLoseController {
     @Autowired
     private YouLoseDao dao;
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping("/getSaves")
     @ResponseBody
     public ResponseEntity<GetSavesResponse> getSaves(@RequestBody final KongregateRequest request) {
@@ -53,7 +53,7 @@ public class YouLoseController {
         }
     }
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping("/getSave")
     @ResponseBody
     public ResponseEntity<String> getSave(@RequestBody final GetSaveRequest request) {
@@ -70,7 +70,7 @@ public class YouLoseController {
         }
     }
 
-    @CrossOrigin(origins = "https://game302789.konggames.com")
+    @CrossOrigin(origins = {"https://game302789.konggames.com", "https://game287566.konggames.com"})
     @PostMapping(value = "/save")
     @ResponseBody
     public ResponseEntity<String> save(@RequestBody final SaveRequest request) {
