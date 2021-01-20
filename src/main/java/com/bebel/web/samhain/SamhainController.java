@@ -82,13 +82,13 @@ public class SamhainController {
     @ResponseBody
     public ResponseEntity<GeneralResponse> addTrad(@RequestBody final SamhainNewTradRequest request) {
         final GeneralResponse response = new GeneralResponse();
-        logger.info("Ajout d'une nouvelle traduction");
+        logger.info("Ajout d'une nouvelle traduction de " + request.getUsername());
         try {
             checkPass(request, true);
 
             final StringBuilder message = new StringBuilder()
                     .append("<html>")
-                    .append("<p>Une proposition de traduction a été envoyé pour les textes suivants :</p>")
+                    .append("<p>Une proposition de traduction a été envoyé par : " + request.getUsername() + " pour les textes suivants :</p>")
                     .append("</br>")
                     .append("<p>").append(request.getNewTrad()).append("</p>")
                     .append("</html>");
